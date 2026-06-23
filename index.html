@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:ital,wght@0,400..800;1,400..800&family=Fraunces:opsz,wght@9..144,400..700&display=swap" rel="stylesheet" />
   <link rel="icon" href="assets/img/favicon-lg.svg?v=7" type="image/svg+xml" />
-  <link rel="stylesheet" href="assets/css/editorial.css?v=21" />
+  <link rel="stylesheet" href="assets/css/editorial.css?v=22" />
 </head>
 <body>
 
@@ -35,6 +35,7 @@
         <a href="#about">About</a>
         <a href="#publications">Papers</a>
         <a href="#experience">Experience</a>
+        <a href="life.html">Life</a>
         <a href="#contact">Contact</a>
       </nav>
       <div class="nav__actions">
@@ -297,10 +298,29 @@
       </div>
     </section>
 
+    <!-- ===== Life portal ===== -->
+    <section class="section" id="life">
+      <div class="container">
+        <div class="section__head">
+          <span class="eyebrow">06 — Off the Clock</span>
+        </div>
+        <a class="portal" href="life.html" data-reveal aria-label="Open my life gallery">
+          <div class="portal__media">
+            <img src="assets/img/life/portal.jpg" alt="Life beyond research" />
+          </div>
+          <div class="portal__body">
+            <h2 class="portal__title">Life beyond<br />the research</h2>
+            <p class="portal__text">Coffee, long walks, and my dog — a look at the moments away from the keyboard.</p>
+            <span class="portal__cta">Step inside <span class="portal__arrow">↗</span></span>
+          </div>
+        </a>
+      </div>
+    </section>
+
     <!-- ===== Contact ===== -->
     <section class="section contact" id="contact">
       <div class="container">
-        <span class="eyebrow">06 — Contact</span>
+        <span class="eyebrow">07 — Contact</span>
         <h2 class="bigtitle">Let's Connect</h2>
         <p class="contact__lead">Interested in collaborating on AI agents, mobile automation, or software-engineering research? I'd love to hear from you.</p>
         <a href="mailto:linqg327@gmail.com" class="btn btn--primary btn--lg">Email me ✉️</a>
@@ -318,9 +338,8 @@
     <div class="container footer__inner">
       <p>© <span id="year"></span> Linqiang (Jackson) Guo</p>
       <div class="footer__links">
+        <a href="life.html">Life ↗</a>
         <a href="classic.html">Classic version ↗</a>
-        <a href="fashion/index.html">Design experiment ↗</a>
-        <a href="music/index.html">Cinematic experiment ↗</a>
         <a href="#top">Back to top ↑</a>
       </div>
     </div>
@@ -329,6 +348,6 @@
   <!-- custom cursor ring (shown only on fine-pointer devices) -->
   <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
 
-  <script src="assets/js/editorial.js?v=21"></script>
+  <script src="assets/js/editorial.js?v=22"></script>
 </body>
 </html>
