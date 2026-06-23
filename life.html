@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Off the Clock — Linqiang (Jackson) Guo</title>
+  <meta name="description" content="Life beyond research — coffee, walks, and my dog." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:ital,wght@0,400..800;1,400..800&family=Fraunces:opsz,wght@9..144,400..700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="assets/img/favicon-lg.svg?v=7" type="image/svg+xml" />
+  <link rel="stylesheet" href="assets/css/editorial.css?v=22" />
+</head>
+<body>
+
+  <!-- intro loader -->
+  <div class="loader" id="loader" aria-hidden="true">
+    <div class="loader__inner">
+      <span class="loader__name">Off the Clock</span>
+      <span class="loader__bar"><i></i></span>
+    </div>
+  </div>
+
+  <canvas class="fx-canvas" id="fxCanvas" aria-hidden="true"></canvas>
+  <canvas class="meteor-canvas" id="meteorCanvas" aria-hidden="true"></canvas>
+
+  <!-- ===== Navigation ===== -->
+  <header class="nav" id="nav">
+    <div class="container nav__inner">
+      <a href="index.html#top" class="nav__brand" aria-label="Linqiang Guo — home"><img class="brandmark-img" src="assets/img/logo-lg.svg?v=7" alt="LG" width="40" height="40" /></a>
+      <nav class="nav__links" id="navLinks" aria-label="Primary">
+        <a href="index.html#top">Home</a>
+        <a href="index.html#publications">Papers</a>
+        <a href="index.html#contact">Contact</a>
+      </nav>
+      <div class="nav__actions">
+        <a href="index.html" class="btn btn--sm">← Back</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode"><span id="themeIcon">☀️</span></button>
+        <button class="nav__burger" id="navBurger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- ===== Hero ===== -->
+    <section class="hero life-hero">
+      <div class="container">
+        <p class="hero__eyebrow eyebrow">Off the Clock</p>
+        <h1 class="hero__name">Life, <span class="hero__alias">beyond</span> the code</h1>
+        <p class="hero__lede">A few moments away from research — coffee, long walks, and my dog.
+          (Placeholder photos for now — real ones coming soon.)</p>
+      </div>
+    </section>
+
+    <!-- ===== Gallery ===== -->
+    <section class="section" id="gallery">
+      <div class="container">
+        <div class="life-gallery">
+          <figure class="life-shot" data-reveal><img src="assets/img/life/life-1.jpg" alt="" /><figcaption>Good boy 🐶</figcaption></figure>
+          <figure class="life-shot" data-reveal><img src="assets/img/life/life-2.jpg" alt="" /><figcaption>Morning walks</figcaption></figure>
+          <figure class="life-shot" data-reveal><img src="assets/img/life/life-3.jpg" alt="" /><figcaption>Weekend coffee</figcaption></figure>
+          <figure class="life-shot" data-reveal><img src="assets/img/life/life-4.jpg" alt="" /><figcaption>Golden hour</figcaption></figure>
+          <figure class="life-shot" data-reveal><img src="assets/img/life/life-5.jpg" alt="" /><figcaption>Little adventures</figcaption></figure>
+          <figure class="life-shot" data-reveal><img src="assets/img/life/life-6.jpg" alt="" /><figcaption>Cozy days</figcaption></figure>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== Footer ===== -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <p>© <span id="year"></span> Linqiang (Jackson) Guo</p>
+      <div class="footer__links">
+        <a href="index.html">← Back to home</a>
+        <a href="#top">Back to top ↑</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+  <script src="assets/js/editorial.js?v=22"></script>
+</body>
+</html>
