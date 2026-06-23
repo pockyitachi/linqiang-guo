@@ -55,7 +55,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 400; line-height
 /* ===== Custom cursor (enabled by JS on fine-pointer devices) ===== */
 .cursor-dot, .cursor-ring { display: none; }
 .has-custom-cursor { cursor: none; }
-.has-custom-cursor a, .has-custom-cursor button, .has-custom-cursor .reveal-frame { cursor: none; }
+.has-custom-cursor a, .has-custom-cursor button, .has-custom-cursor .portrait { cursor: none; }
 .has-custom-cursor .cursor-dot, .has-custom-cursor .cursor-ring {
   display: block; position: fixed; top: 0; left: 0; z-index: 9999; pointer-events: none;
   border-radius: 50%; transform: translate(-50%, -50%); will-change: transform;
@@ -149,22 +149,18 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 400; line-height
 .hero__socials a { font-size: 0.85rem; font-weight: 600; letter-spacing: 0.04em; color: var(--paper-soft); transition: color 0.2s; }
 .hero__socials a:hover { color: var(--paper); }
 
-/* portrait with grayscale -> colour brush reveal */
+/* portrait — full colour with a subtle iridescent frame */
 .hero__media { display: grid; place-items: center; }
-.reveal-frame {
-  position: relative; width: 300px; height: 360px; border-radius: var(--radius);
-  overflow: hidden; box-shadow: 0 30px 70px rgba(0,0,0,0.5); cursor: crosshair;
-  border: 1px solid var(--line);
+.portrait {
+  width: 300px; height: 360px; border-radius: 24px; padding: 3px;
+  background: linear-gradient(135deg, var(--c1), var(--c2), var(--c3));
+  box-shadow: 0 30px 70px rgba(0,0,0,0.5); overflow: hidden;
 }
-.reveal-frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.reveal-frame .bw { filter: grayscale(100%) contrast(1.05); }
-.reveal-frame .color {
-  pointer-events: none;
-  -webkit-mask-image: radial-gradient(circle 0px at 50% 50%, #000 0%, transparent 100%);
-  mask-image: radial-gradient(circle 0px at 50% 50%, #000 0%, transparent 100%);
-  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+.portrait img {
+  width: 100%; height: 100%; object-fit: cover; object-position: center 18%;
+  border-radius: 21px; display: block; transition: transform 0.5s ease;
 }
-.reveal-frame__hint { position: absolute; bottom: 10px; left: 0; right: 0; text-align: center; font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--paper-soft); z-index: 2; }
+.portrait:hover img { transform: scale(1.04); }
 
 /* ===== Sections (all transparent so the dot grid shows through) ===== */
 .section { padding: 84px 0; position: relative; }

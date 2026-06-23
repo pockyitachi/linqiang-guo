@@ -48,7 +48,7 @@
       cRing.style.transform = "translate(" + rx + "px," + ry + "px) translate(-50%,-50%)";
       requestAnimationFrame(ringLoop);
     })();
-    document.querySelectorAll("a, button, .reveal-frame").forEach(function (el) {
+    document.querySelectorAll("a, button, .portrait").forEach(function (el) {
       el.addEventListener("mouseenter", function () { cRing.classList.add("is-hover"); });
       el.addEventListener("mouseleave", function () { cRing.classList.remove("is-hover"); });
     });
@@ -154,34 +154,6 @@
 
     build();
     requestAnimationFrame(tick);
-  }
-
-  /* --------------------------------------------------------
-     2. PORTRAIT BRUSH REVEAL (grayscale -> colour)
-     -------------------------------------------------------- */
-  var frame = document.getElementById("revealFrame");
-  var colorLayer = document.getElementById("revealColor");
-  if (frame && colorLayer) {
-    var R = 130;
-    function maskAt(x, y) {
-      var g = "radial-gradient(circle " + R + "px at " + x + "px " + y + "px," +
-              " rgba(0,0,0,1) 18%, rgba(0,0,0,0.8) 42%, rgba(0,0,0,0.4) 62%, rgba(0,0,0,0) 80%)";
-      colorLayer.style.webkitMaskImage = g; colorLayer.style.maskImage = g;
-    }
-    function hide() {
-      var g = "radial-gradient(circle 0px at 50% 50%, #000 0%, transparent 100%)";
-      colorLayer.style.webkitMaskImage = g; colorLayer.style.maskImage = g;
-    }
-    function move(e) {
-      var rect = frame.getBoundingClientRect();
-      var p = e.touches ? e.touches[0] : e;
-      maskAt(p.clientX - rect.left, p.clientY - rect.top);
-    }
-    frame.addEventListener("mousemove", move);
-    frame.addEventListener("mouseleave", hide);
-    frame.addEventListener("touchmove", function (e) { move(e); }, { passive: true });
-    frame.addEventListener("touchend", hide);
-    hide();
   }
 
   /* --------------------------------------------------------
