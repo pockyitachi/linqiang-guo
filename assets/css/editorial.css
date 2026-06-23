@@ -101,13 +101,10 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 400; line-height
 
 /* ===== Hero ===== */
 .hero { position: relative; padding: 70px 0 90px; overflow: hidden; }
-/* blurred colour orb that follows the cursor */
-.hero__glow {
-  position: absolute; top: 0; left: 0; width: 620px; height: 620px; border-radius: 50%;
-  background: conic-gradient(from 0deg, var(--c1), var(--c2), var(--c3), var(--c4), var(--c1));
-  filter: blur(90px); opacity: 0.5; mix-blend-mode: screen; pointer-events: none; z-index: 0;
-  transform: translate3d(calc(var(--gx, 50vw) - 310px), calc(var(--gy, 40vh) - 310px), 0);
-  transition: transform 0.18s ease-out;
+/* interactive dot grid that reacts to the cursor (drawn in JS) */
+.hero__canvas {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 0;
 }
 .hero__inner { position: relative; z-index: 2; display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 46px; align-items: center; }
 .hero__eyebrow { color: var(--paper-soft); margin-bottom: 18px; }
@@ -254,5 +251,5 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 400; line-height
 
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
-  .hero__glow { display: none; }
+  .hero__canvas { display: none; }
 }
