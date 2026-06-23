@@ -52,16 +52,14 @@
      A small dot tracks the pointer exactly; a larger ring
      trails with easing and grows over interactive elements.
      -------------------------------------------------------- */
-  var cDot = document.getElementById("cursorDot");
   var cRing = document.getElementById("cursorRing");
   var finePointer = window.matchMedia("(pointer: fine)").matches;
-  if (cDot && cRing && finePointer && !reduceMotion) {
+  if (cRing && finePointer && !reduceMotion) {
     root.classList.add("has-custom-cursor");
     var cx = window.innerWidth / 2, cy = window.innerHeight / 2;
     var rx = cx, ry = cy;
     window.addEventListener("pointermove", function (e) {
       cx = e.clientX; cy = e.clientY;
-      cDot.style.transform = "translate(" + cx + "px," + cy + "px) translate(-50%,-50%)";
     }, { passive: true });
     (function ringLoop() {
       rx += (cx - rx) * 0.18; ry += (cy - ry) * 0.18;
@@ -117,11 +115,6 @@
     // smoothed pointer in viewport coords; start off-screen
     var mx = -9999, my = -9999, sx = -9999, sy = -9999;
 
-    // mosaic trail tiles spawned behind the cursor
-    var trail = [];
-    var TILE = 18;   // grid cell -> mosaic snap
-    var LIFE = 650;  // ms before a tile fades out
-
     function build() {
       W = window.innerWidth; H = window.innerHeight;
       fxCanvas.width = Math.round(W * dpr);
@@ -145,8 +138,6 @@
       sx += (mx - sx) * 0.16; sy += (my - sy) * 0.16;
       ctx.clearRect(0, 0, W, H);
       var BASE = baseColour();
-
-      // 1) the resting/interactive dot grid
       for (var i = 0; i < dots.length; i++) {
         var d = dots[i];
         var dx = d.bx - sx, dy = d.by - sy;
@@ -167,34 +158,12 @@
         ctx.arc(x, y, size, 0, Math.PI * 2);
         ctx.fill();
       }
-
-      // 2) the mosaic trail behind the cursor (newest = brightest)
-      var now = performance.now();
-      for (var k = trail.length - 1; k >= 0; k--) {
-        var p = trail[k];
-        var age = (now - p.born) / LIFE;
-        if (age >= 1) { trail.splice(k, 1); continue; }
-        var al = (1 - age) * 0.62;
-        ctx.fillStyle = "rgba(" + p.col[0] + "," + p.col[1] + "," + p.col[2] + "," + al + ")";
-        var s = TILE - 3; // small gap between tiles -> mosaic look
-        ctx.fillRect(p.tx - s / 2, p.ty - s / 2, s, s);
-      }
-
       requestAnimationFrame(tick);
     }
 
     // canvas is fixed at viewport 0,0, so pointer coords map directly
     window.addEventListener("pointermove", function (e) {
       mx = e.clientX; my = e.clientY;
-      // spawn a mosaic tile snapped to the grid (skip duplicates)
-      var tx = Math.round(e.clientX / TILE) * TILE;
-      var ty = Math.round(e.clientY / TILE) * TILE;
-      var last = trail[trail.length - 1];
-      if (!last || last.tx !== tx || last.ty !== ty) {
-        trail.push({ tx: tx, ty: ty, born: performance.now(),
-                     col: palette[(Math.random() * palette.length) | 0] });
-        if (trail.length > 140) trail.shift();
-      }
     }, { passive: true });
     window.addEventListener("pointerout", function () { mx = -9999; my = -9999; });
 
@@ -205,6 +174,78 @@
 
     build();
     requestAnimationFrame(tick);
+  }
+
+  /* --------------------------------------------------------
+     2. METEOR CURSOR (bright head + tapering mosaic tail)
+     Drawn on an overlay canvas above all content so the
+     meteor reads as one object anywhere on the page.
+     -------------------------------------------------------- */
+  var meteor = document.getElementById("meteorCanvas");
+  if (meteor && finePointer && !reduceMotion) {
+    var mctx = meteor.getContext("2d");
+    var mdpr = Math.min(window.devicePixelRatio || 1, 2);
+    var mW = 0, mH = 0;
+    var pal = [[255, 46, 154], [124, 77, 255], [24, 199, 255], [255, 210, 63]];
+    var MTILE = 16, MLIFE = 520;
+    var tiles = [];
+    var ptrX = window.innerWidth / 2, ptrY = window.innerHeight / 2; // raw pointer
+    var hx = ptrX, hy = ptrY;                                         // smoothed head
+    var palIdx = 0, mActive = false;
+
+    function meteorSize() {
+      mW = window.innerWidth; mH = window.innerHeight;
+      meteor.width = Math.round(mW * mdpr); meteor.height = Math.round(mH * mdpr);
+      mctx.setTransform(mdpr, 0, 0, mdpr, 0, 0);
+    }
+
+    window.addEventListener("pointermove", function (e) {
+      ptrX = e.clientX; ptrY = e.clientY; mActive = true;
+      // drop a mosaic tile, snapped to a grid (skip duplicate cells)
+      var tx = Math.round(ptrX / MTILE) * MTILE, ty = Math.round(ptrY / MTILE) * MTILE;
+      var last = tiles[tiles.length - 1];
+      if (!last || last.tx !== tx || last.ty !== ty) {
+        tiles.push({ tx: tx, ty: ty, born: performance.now(), col: pal[(palIdx++) % pal.length] });
+        if (tiles.length > 72) tiles.shift();
+      }
+    }, { passive: true });
+    window.addEventListener("pointerout", function () { mActive = false; });
+
+    function meteorTick() {
+      hx += (ptrX - hx) * 0.28; hy += (ptrY - hy) * 0.28;
+      mctx.clearRect(0, 0, mW, mH);
+      var now = performance.now();
+
+      // tapering, glowing mosaic tail (newer tiles are larger & brighter)
+      for (var i = tiles.length - 1; i >= 0; i--) {
+        var p = tiles[i];
+        var k = 1 - (now - p.born) / MLIFE;
+        if (k <= 0) { tiles.splice(i, 1); continue; }
+        var s = 3 + (MTILE - 2) * k;
+        mctx.shadowBlur = 12 * k;
+        mctx.shadowColor = "rgba(" + p.col[0] + "," + p.col[1] + "," + p.col[2] + ",0.9)";
+        mctx.fillStyle = "rgba(" + p.col[0] + "," + p.col[1] + "," + p.col[2] + "," + (k * 0.85) + ")";
+        mctx.fillRect(p.tx - s / 2, p.ty - s / 2, s, s);
+      }
+
+      // bright meteor head at the smoothed cursor position
+      if (mActive) {
+        mctx.shadowBlur = 22; mctx.shadowColor = "rgba(255,90,170,0.95)";
+        var g = mctx.createRadialGradient(hx, hy, 0, hx, hy, 10);
+        g.addColorStop(0, "rgba(255,255,255,0.98)");
+        g.addColorStop(0.45, "rgba(255,90,170,0.95)");
+        g.addColorStop(1, "rgba(124,77,255,0)");
+        mctx.fillStyle = g;
+        mctx.beginPath(); mctx.arc(hx, hy, 10, 0, Math.PI * 2); mctx.fill();
+      }
+      mctx.shadowBlur = 0;
+      requestAnimationFrame(meteorTick);
+    }
+
+    var meteorRt;
+    window.addEventListener("resize", function () { clearTimeout(meteorRt); meteorRt = setTimeout(meteorSize, 150); });
+    meteorSize();
+    requestAnimationFrame(meteorTick);
   }
 
   /* --------------------------------------------------------

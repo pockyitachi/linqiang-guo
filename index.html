@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:ital,wght@0,400..800;1,400..800&family=Fraunces:opsz,wght@9..144,400..700&display=swap" rel="stylesheet" />
   <link rel="icon" href="assets/img/favicon-lg.svg?v=7" type="image/svg+xml" />
-  <link rel="stylesheet" href="assets/css/editorial.css?v=20" />
+  <link rel="stylesheet" href="assets/css/editorial.css?v=21" />
 </head>
 <body>
 
@@ -23,6 +23,8 @@
 
   <!-- full-page interactive dot grid (drawn in JS), behind all content -->
   <canvas class="fx-canvas" id="fxCanvas" aria-hidden="true"></canvas>
+  <!-- meteor cursor (head + mosaic tail), drawn above content -->
+  <canvas class="meteor-canvas" id="meteorCanvas" aria-hidden="true"></canvas>
 
   <!-- ===== Navigation ===== -->
   <header class="nav" id="nav">
@@ -324,10 +326,9 @@
     </div>
   </footer>
 
-  <!-- custom cursor (shown only on fine-pointer devices) -->
+  <!-- custom cursor ring (shown only on fine-pointer devices) -->
   <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
-  <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
 
-  <script src="assets/js/editorial.js?v=20"></script>
+  <script src="assets/js/editorial.js?v=21"></script>
 </body>
 </html>
