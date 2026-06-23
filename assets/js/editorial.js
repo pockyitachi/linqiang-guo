@@ -12,7 +12,16 @@
      -------------------------------------------------------- */
   var themeBtn = document.getElementById("themeToggle");
   var themeIcon = document.getElementById("themeIcon");
-  var theme = localStorage.getItem("theme") || "dark";
+  // If the visitor has chosen before, honour it; otherwise pick by local
+  // time of day — light during the day (7:00–19:00), dark at night.
+  var storedTheme = localStorage.getItem("theme");
+  var theme;
+  if (storedTheme === "light" || storedTheme === "dark") {
+    theme = storedTheme;
+  } else {
+    var hr = new Date().getHours();
+    theme = (hr >= 7 && hr < 19) ? "light" : "dark";
+  }
   function applyTheme(t) {
     theme = t;
     if (t === "light") root.setAttribute("data-theme", "light");
