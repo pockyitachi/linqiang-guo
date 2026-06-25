@@ -232,6 +232,8 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 400; line-height
 .pub__venue .badge { display: inline-block; font-family: var(--font-body); font-size: 0.72rem; font-weight: 700; padding: 6px 12px; border-radius: 8px; white-space: nowrap; }
 .badge--hot { background: linear-gradient(120deg, var(--c1), var(--c2)); color: #fff; }
 .badge--soft { border: 1px solid var(--line); color: var(--paper-soft); }
+a.badge { text-decoration: none; transition: color 0.2s ease, border-color 0.2s ease; }
+a.badge--soft:hover { color: var(--paper); border-color: color-mix(in srgb, var(--paper) 40%, transparent); }
 .pub__body h3 { font-family: var(--font-body); font-weight: 700; font-size: 1.08rem; line-height: 1.35; margin-bottom: 6px; }
 .pub__authors { font-size: 0.92rem; color: var(--paper-soft); }
 .pub__authors strong { color: var(--paper); }
