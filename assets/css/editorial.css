@@ -7,7 +7,7 @@
 :root {
   --ink: #0c0c0e;          /* near-black base                  */
   --paper: #f4f1ea;        /* light text                       */
-  --paper-soft: rgba(244,241,234,0.6);
+  --paper-soft: rgba(244,241,234,0.82);
   --line: rgba(244,241,234,0.13);
   /* iridescent palette used by the cursor effects */
   --c1: #ff2e9a;  --c2: #7c4dff;  --c3: #18c7ff;  --c4: #ffd23f;
@@ -23,7 +23,7 @@
 [data-theme="light"] {
   --ink: #f4f1ea;        /* light base (used as background) */
   --paper: #18181d;      /* dark text                       */
-  --paper-soft: rgba(24,24,29,0.62);
+  --paper-soft: rgba(24,24,29,0.82);
   --line: rgba(24,24,29,0.14);
 }
 
