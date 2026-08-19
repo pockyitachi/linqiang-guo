@@ -238,6 +238,8 @@ a.badge--soft:hover { color: var(--paper); border-color: color-mix(in srgb, var(
 .pub__authors { font-size: 0.92rem; color: var(--paper-soft); }
 .pub__authors strong { color: var(--paper); }
 .pub__note { font-size: 0.84rem; font-style: italic; color: var(--paper-soft); margin-top: 4px; }
+.pub__note a { color: var(--c3); text-decoration: underline; text-underline-offset: 2px; }
+.pub__note a:hover { color: var(--paper); }
 
 /* ===== News ===== */
 .news { list-style: none; }
