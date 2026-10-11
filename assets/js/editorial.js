@@ -11,7 +11,6 @@
      THEME TOGGLE (dark default / light day mode, persisted)
      -------------------------------------------------------- */
   var themeBtn = document.getElementById("themeToggle");
-  var themeIcon = document.getElementById("themeIcon");
   // If the visitor has chosen before, honour it; otherwise pick by local
   // time of day — light during the day (7:00–19:00), dark at night.
   var storedTheme = localStorage.getItem("theme");
@@ -26,7 +25,6 @@
     theme = t;
     if (t === "light") root.setAttribute("data-theme", "light");
     else root.removeAttribute("data-theme");
-    if (themeIcon) themeIcon.textContent = (t === "dark") ? "☀️" : "🌙";
   }
   applyTheme(theme);
   if (themeBtn) {
