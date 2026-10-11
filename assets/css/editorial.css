@@ -250,6 +250,8 @@ a.badge--soft:hover { color: var(--paper); border-color: color-mix(in srgb, var(
 .news__text { color: var(--paper-soft); font-size: 1rem; }
 .news__text strong { color: var(--paper); font-weight: 700; }
 .news__text em { font-style: normal; background: linear-gradient(120deg, var(--c1), var(--c2), var(--c3)); -webkit-background-clip: text; background-clip: text; color: transparent; font-weight: 700; }
+.news__text a { color: var(--c3); text-decoration: underline; text-underline-offset: 2px; }
+.news__text a:hover { color: var(--paper); }
 
 /* ===== Life portal (homepage entry to the life gallery) ===== */
 .portal {
