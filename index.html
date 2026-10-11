@@ -9,9 +9,74 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:ital,wght@0,400..800;1,400..800&family=Fraunces:opsz,wght@9..144,400..700&display=swap" rel="stylesheet" />
   <link rel="icon" href="assets/img/favicon-lg.svg?v=7" type="image/svg+xml" />
-  <link rel="stylesheet" href="assets/css/editorial.css?v=48" />
+  <link rel="stylesheet" href="assets/css/editorial.css?v=49" />
 </head>
 <body>
+  <!-- custom line-icon set (gradient monoline, matches the LG mark) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="g-ico" gradientUnits="userSpaceOnUse" x1="4" y1="4" x2="44" y2="44">
+        <stop offset="0" style="stop-color:var(--c1)"/>
+        <stop offset="0.5" style="stop-color:var(--c2)"/>
+        <stop offset="1" style="stop-color:var(--c3)"/>
+      </linearGradient>
+    </defs>
+    <symbol id="i-code" viewBox="0 0 48 48">
+      <path pathLength="1" d="M16 13 L6 24 L16 35"/>
+      <path pathLength="1" d="M32 13 L42 24 L32 35"/>
+      <path pathLength="1" d="M27.5 9 L20.5 39"/>
+    </symbol>
+    <symbol id="i-neural" viewBox="0 0 48 48">
+      <path pathLength="1" d="M8 15 L24 7 M8 15 L24 24 M8 15 L24 41 M8 33 L24 7 M8 33 L24 24 M8 33 L24 41 M24 7 L40 24 M24 24 L40 24 M24 41 L40 24"/>
+      <circle pathLength="1" cx="8" cy="15" r="3.6" class="ico-node"/>
+      <circle pathLength="1" cx="8" cy="33" r="3.6" class="ico-node"/>
+      <circle pathLength="1" cx="24" cy="7" r="3.6" class="ico-node"/>
+      <circle pathLength="1" cx="24" cy="24" r="3.6" class="ico-node"/>
+      <circle pathLength="1" cx="24" cy="41" r="3.6" class="ico-node"/>
+      <circle pathLength="1" cx="40" cy="24" r="4.6" class="ico-node"/>
+    </symbol>
+    <symbol id="i-stack" viewBox="0 0 48 48">
+      <path pathLength="1" d="M24 7 L42 16 L24 25 L6 16 Z"/>
+      <path pathLength="1" d="M6 24 L24 33 L42 24"/>
+      <path pathLength="1" d="M6 32 L24 41 L42 32"/>
+    </symbol>
+    <symbol id="i-pin" viewBox="0 0 48 48">
+      <path pathLength="1" d="M24 43 C24 43 37 30 37 19.5 A13 13 0 0 0 11 19.5 C11 30 24 43 24 43 Z"/>
+      <circle pathLength="1" cx="24" cy="19.5" r="4.6"/>
+    </symbol>
+    <symbol id="i-cap" viewBox="0 0 48 48">
+      <path pathLength="1" d="M4 19 L24 10 L44 19 L24 28 Z"/>
+      <path pathLength="1" d="M12 23.5 V32 C15 35.5 19 37.5 24 37.5 C29 37.5 33 35.5 36 32 V23.5"/>
+      <path pathLength="1" d="M44 19 V31"/>
+    </symbol>
+    <symbol id="i-agent" viewBox="0 0 48 48">
+      <rect pathLength="1" x="13" y="5" width="22" height="38" rx="5"/>
+      <path pathLength="1" d="M21 37.5 H27"/>
+      <path class="ico-fill" d="M24 13 C24.8 19 26.5 20.7 32 21.5 C26.5 22.3 24.8 24 24 30 C23.2 24 21.5 22.3 16 21.5 C21.5 20.7 23.2 19 24 13 Z"/>
+    </symbol>
+    <symbol id="i-mail" viewBox="0 0 48 48">
+      <rect pathLength="1" x="5" y="11" width="38" height="27" rx="5"/>
+      <path pathLength="1" d="M7 14 L24 27 L41 14"/>
+    </symbol>
+    <symbol id="i-spark" viewBox="0 0 48 48">
+      <path class="ico-fill" d="M24 3 C25.6 17 31 22.4 45 24 C31 25.6 25.6 31 24 45 C22.4 31 17 25.6 3 24 C17 22.4 22.4 17 24 3 Z"/>
+    </symbol>
+    <symbol id="i-laurel" viewBox="0 0 48 48">
+      <path d="M21.5 43C11 39 5.5 28 10 11.5"/>
+      <path d="M26.5 43C37 39 42.5 28 38 11.5"/>
+      <path class="ico-fill" d="M17.94 41.26Q13.06 38.17 9 42.28Q13.88 45.37 17.94 41.26Z M17.94 41.26Q19.09 36.78 14.96 34.71Q13.81 39.19 17.94 41.26Z M13.12 37.06Q9.54 32.53 4.34 35.06Q7.93 39.6 13.12 37.06Z M13.12 37.06Q15.68 33.21 12.47 29.89Q9.91 33.74 13.12 37.06Z M9.88 31.29Q7.99 25.83 2.25 26.52Q4.14 31.98 9.88 31.29Z M9.88 31.29Q13.57 28.5 11.63 24.31Q7.94 27.1 9.88 31.29Z M8.46 24.03Q8.24 18.26 2.55 17.25Q2.77 23.02 8.46 24.03Z M8.46 24.03Q12.8 22.44 12.17 17.86Q7.83 19.45 8.46 24.03Z M10 11.5Q14.18 8.41 12.06 3.67Q7.87 6.75 10 11.5Z"/>
+      <path class="ico-fill" d="M30.06 41.26Q34.94 38.17 39 42.28Q34.12 45.37 30.06 41.26ZM30.06 41.26Q28.91 36.78 33.04 34.71Q34.19 39.19 30.06 41.26ZM34.88 37.06Q38.46 32.53 43.66 35.06Q40.07 39.6 34.88 37.06ZM34.88 37.06Q32.32 33.21 35.53 29.89Q38.09 33.74 34.88 37.06ZM38.12 31.29Q40.01 25.83 45.75 26.52Q43.86 31.98 38.12 31.29ZM38.12 31.29Q34.43 28.5 36.37 24.31Q40.06 27.1 38.12 31.29ZM39.54 24.03Q39.76 18.26 45.45 17.25Q45.23 23.02 39.54 24.03ZM39.54 24.03Q35.2 22.44 35.83 17.86Q40.17 19.45 39.54 24.03ZM38 11.5Q33.82 8.41 35.94 3.67Q40.13 6.75 38 11.5Z"/>
+      <path class="ico-fill" d="M24 15.5C24.6 20 25.9 21.3 30 22C25.9 22.7 24.6 24 24 28.5C23.4 24 22.1 22.7 18 22C22.1 21.3 23.4 20 24 15.5Z"/>
+    </symbol>
+    <symbol id="i-sun" viewBox="0 0 48 48">
+      <circle cx="24" cy="24" r="9"/>
+      <path d="M24 4 V9 M24 39 V44 M4 24 H9 M39 24 H44 M9.9 9.9 L13.4 13.4 M34.6 34.6 L38.1 38.1 M9.9 38.1 L13.4 34.6 M34.6 13.4 L38.1 9.9"/>
+    </symbol>
+    <symbol id="i-moon" viewBox="0 0 48 48">
+      <path d="M41 27.5 A17 17 0 1 1 20.5 7 A13.2 13.2 0 0 0 41 27.5 Z"/>
+    </symbol>
+  </svg>
+
 
   <!-- intro loader (dismissed by JS once the page is ready) -->
   <div class="loader" id="loader" aria-hidden="true">
@@ -43,8 +108,8 @@
         <a href="#contact">Contact</a>
       </nav>
       <div class="nav__actions">
-        <a href="assets/files/Linqiang_Guo_Resume_2026.pdf?v=48" class="btn btn--sm" target="_blank" rel="noopener">CV</a>
-        <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode"><span id="themeIcon">☀️</span></button>
+        <a href="assets/files/Linqiang_Guo_Resume_2026.pdf?v=49" class="btn btn--sm" target="_blank" rel="noopener">CV</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode"><svg class="ico ico--sun" aria-hidden="true"><use href="#i-sun"/></svg><svg class="ico ico--moon" aria-hidden="true"><use href="#i-moon"/></svg></button>
         <button class="nav__burger" id="navBurger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
       </div>
     </div>
@@ -68,7 +133,7 @@
           </p>
           <div class="hero__cta">
             <a href="#publications" class="btn btn--primary">View publications</a>
-            <a href="assets/files/Linqiang_Guo_Resume_2026.pdf?v=48" class="btn btn--ghost" target="_blank" rel="noopener">Download CV ↓</a>
+            <a href="assets/files/Linqiang_Guo_Resume_2026.pdf?v=49" class="btn btn--ghost" target="_blank" rel="noopener">Download CV ↓</a>
           </div>
           <div class="hero__socials">
             <a href="https://github.com/pockyitachi" target="_blank" rel="noopener">GitHub</a>
@@ -84,10 +149,26 @@
       </div>
     </section>
 
+    <!-- ===== Marquee band (research themes, F1-style ticker) ===== -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track">
+        <span>Mobile GUI Agents</span><svg class="ico marquee__star"><use href="#i-spark"/></svg>
+        <span class="is-outline">Multimodal VLM Post-training</span><svg class="ico marquee__star"><use href="#i-spark"/></svg>
+        <span>LLM Agents</span><svg class="ico marquee__star"><use href="#i-spark"/></svg>
+        <span class="is-outline">State-aware Reasoning</span><svg class="ico marquee__star"><use href="#i-spark"/></svg>
+        <span>AI for Software Engineering</span><svg class="ico marquee__star"><use href="#i-spark"/></svg>
+        <span>Mobile GUI Agents</span><svg class="ico marquee__star"><use href="#i-spark"/></svg>
+        <span class="is-outline">Multimodal VLM Post-training</span><svg class="ico marquee__star"><use href="#i-spark"/></svg>
+        <span>LLM Agents</span><svg class="ico marquee__star"><use href="#i-spark"/></svg>
+        <span class="is-outline">State-aware Reasoning</span><svg class="ico marquee__star"><use href="#i-spark"/></svg>
+        <span>AI for Software Engineering</span><svg class="ico marquee__star"><use href="#i-spark"/></svg>
+      </div>
+    </div>
+
     <!-- ===== News ===== -->
     <section class="section section--paper" id="news">
       <div class="container">
-        <div class="section__head">
+        <div class="section__head" data-num="01">
           <span class="eyebrow">01 — News</span>
           <h2 class="bigtitle">Latest News</h2>
         </div>
@@ -98,7 +179,7 @@
           </li>
           <li class="news__item" data-reveal>
             <span class="news__date">Aug 2026</span>
-            <p class="news__text">🏆 Our paper <strong>Learning to Adapt: Few-Shot Generalization of Mobile Agents to Unseen Applications</strong> received the <strong>Best Paper Award</strong> at the <em>ECCV 2026 Workshop on Multimodal Digital Agents (MDA)</em>, with an invited Spotlight Talk.</p>
+            <p class="news__text"><svg class="ico ico--award" aria-hidden="true"><use href="#i-laurel"/></svg> Our paper <strong>Learning to Adapt: Few-Shot Generalization of Mobile Agents to Unseen Applications</strong> received the <strong>Best Paper Award</strong> at the <em>ECCV 2026 Workshop on Multimodal Digital Agents (MDA)</em>, with an invited Spotlight Talk.</p>
           </li>
           <li class="news__item" data-reveal>
             <span class="news__date">Aug 2026</span>
@@ -147,7 +228,7 @@
     <!-- ===== About ===== -->
     <section class="section section--paper" id="about">
       <div class="container">
-        <div class="section__head">
+        <div class="section__head" data-num="02">
           <span class="eyebrow">02 — About</span>
         </div>
         <p class="statement">Research at the intersection of <em>AI</em> and <em>software systems</em>.</p>
@@ -170,10 +251,10 @@
               University of Miami and a BS in Electrical Engineering from Missouri.
             </p>
             <ul class="facts">
-              <li><span>📍</span> Montreal, Canada</li>
-              <li><span>🎓</span> PhD @ Concordia University</li>
-              <li><span>🤖</span> LLM agents &amp; mobile automation</li>
-              <li><span>✉️</span> linqg327@gmail.com</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-pin"/></svg> Montreal, Canada</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-cap"/></svg> PhD @ Concordia University</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-agent"/></svg> LLM agents &amp; mobile automation</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-mail"/></svg> linqg327@gmail.com</li>
             </ul>
           </div>
           <div>
@@ -200,31 +281,37 @@
     <!-- ===== Skills ===== -->
     <section class="section" id="skills">
       <div class="container">
-        <div class="section__head">
+        <div class="section__head" data-num="03">
           <span class="eyebrow">03 — Skills</span>
           <h2 class="bigtitle">Tools &amp; Tech</h2>
         </div>
-        <div class="skills">
-          <article class="skill">
-            <div class="skill__icon">💻</div><h3>Languages</h3>
-            <ul class="tags"><li>Python</li><li>C</li><li>Java</li><li>SQL</li><li>HTML</li><li>CSS</li><li>MATLAB</li></ul>
-          </article>
-          <article class="skill">
-            <div class="skill__icon">🧠</div><h3>AI / ML Frameworks</h3>
-            <ul class="tags"><li>Multimodal VLM post-training</li><li>SFT · DPO · RLHF</li><li>LLM agents</li><li>PyTorch</li><li>OpenCV</li><li>HuggingFace</li><li>Unsloth</li></ul>
-          </article>
-          <article class="skill">
-            <div class="skill__icon">⚙️</div><h3>Backend &amp; Platforms</h3>
-            <ul class="tags"><li>Spring Boot</li><li>Spring Cloud</li><li>Kubernetes</li><li>AWS</li><li>MySQL</li><li>Linux</li><li>ADB</li></ul>
-          </article>
-        </div>
+        <ol class="stack">
+          <li class="stack__row" data-reveal>
+            <span class="stack__no">01</span>
+            <svg class="ico stack__glyph" aria-hidden="true"><use href="#i-code"/></svg>
+            <div class="stack__head"><h3>Languages</h3><p>What I think in</p></div>
+            <ul class="stack__tags"><li>Python</li><li>C</li><li>Java</li><li>SQL</li><li>HTML</li><li>CSS</li><li>MATLAB</li></ul>
+          </li>
+          <li class="stack__row" data-reveal>
+            <span class="stack__no">02</span>
+            <svg class="ico stack__glyph" aria-hidden="true"><use href="#i-neural"/></svg>
+            <div class="stack__head"><h3>AI / ML</h3><p>What I train &amp; evaluate</p></div>
+            <ul class="stack__tags"><li class="is-key">Multimodal VLM post-training</li><li class="is-key">SFT · DPO · RLHF</li><li class="is-key">LLM agents</li><li>PyTorch</li><li>OpenCV</li><li>HuggingFace</li><li>Unsloth</li></ul>
+          </li>
+          <li class="stack__row" data-reveal>
+            <span class="stack__no">03</span>
+            <svg class="ico stack__glyph" aria-hidden="true"><use href="#i-stack"/></svg>
+            <div class="stack__head"><h3>Backend &amp; Platforms</h3><p>What I&rsquo;ve shipped at scale</p></div>
+            <ul class="stack__tags"><li>Spring Boot</li><li>Spring Cloud</li><li>Kubernetes</li><li>AWS</li><li>MySQL</li><li>Linux</li><li>ADB</li></ul>
+          </li>
+        </ol>
       </div>
     </section>
 
     <!-- ===== Publications ===== -->
     <section class="section" id="publications">
       <div class="container">
-        <div class="section__head">
+        <div class="section__head" data-num="04">
           <span class="eyebrow">04 — Publications</span>
           <h2 class="bigtitle">Selected Papers</h2>
         </div>
@@ -235,7 +322,7 @@
             <div class="pub__body">
               <h3>Learning to Adapt: Few-Shot Generalization of Mobile Agents to Unseen Applications</h3>
               <p class="pub__authors">Siobhan Reid, Li Gu, Zhixiang Chi, <strong>Linqiang Guo</strong>, Zihuan Jiang, Ziqiang Wang, Yuanhao Yu, Yang Wang</p>
-              <p class="pub__note">🏆 <strong>Best Paper Award</strong> · ECCV 2026 Workshop on Multimodal Digital Agents (MDA) · Spotlight Talk + Poster</p>
+              <p class="pub__note"><svg class="ico ico--award" aria-hidden="true"><use href="#i-laurel"/></svg> <strong>Best Paper Award</strong> · ECCV 2026 Workshop on Multimodal Digital Agents (MDA) · Spotlight Talk + Poster</p>
             </div>
           </li>
           <li class="pub" data-reveal>
@@ -330,7 +417,7 @@
     <!-- ===== Experience ===== -->
     <section class="section section--paper" id="experience">
       <div class="container">
-        <div class="section__head">
+        <div class="section__head" data-num="05">
           <span class="eyebrow">05 — Experience</span>
           <h2 class="bigtitle">Where I've Worked</h2>
         </div>
@@ -391,14 +478,14 @@
     <!-- ===== Honors & Awards ===== -->
     <section class="section section--paper" id="awards">
       <div class="container">
-        <div class="section__head">
+        <div class="section__head" data-num="06">
           <span class="eyebrow">06 — Honors &amp; Awards</span>
           <h2 class="bigtitle">Honors &amp; Awards</h2>
         </div>
         <ul class="news">
           <li class="news__item" data-reveal>
             <span class="news__date">2026</span>
-            <p class="news__text">🏆 <strong>Best Paper Award</strong> — ECCV 2026 Workshop on Multimodal Digital Agents (MDA), for <em>Learning to Adapt</em>.</p>
+            <p class="news__text"><svg class="ico ico--award" aria-hidden="true"><use href="#i-laurel"/></svg> <strong>Best Paper Award</strong> — ECCV 2026 Workshop on Multimodal Digital Agents (MDA), for <em>Learning to Adapt</em>.</p>
           </li>
           <li class="news__item" data-reveal>
             <span class="news__date">2023</span>
@@ -415,7 +502,7 @@
     <!-- ===== Life portal ===== -->
     <section class="section" id="life">
       <div class="container">
-        <div class="section__head">
+        <div class="section__head" data-num="07">
           <span class="eyebrow">07 — Off the Clock</span>
           <h2 class="bigtitle">Beyond Work</h2>
         </div>
@@ -438,11 +525,11 @@
         <span class="eyebrow">08 — Contact</span>
         <h2 class="bigtitle">Let's Connect</h2>
         <p class="contact__lead">Interested in collaborating on AI agents, mobile automation, or software-engineering research? I'd love to hear from you.</p>
-        <a href="mailto:linqg327@gmail.com" class="btn btn--primary btn--lg">Email me ✉️</a>
+        <a href="mailto:linqg327@gmail.com" class="btn btn--primary btn--lg">Email me →</a>
         <div class="contact__socials">
           <a href="https://github.com/pockyitachi" target="_blank" rel="noopener">GitHub</a>
           <a href="mailto:linqg327@gmail.com">linqg327@gmail.com</a>
-          <a href="assets/files/Linqiang_Guo_Resume_2026.pdf?v=48" target="_blank" rel="noopener">Résumé (PDF)</a>
+          <a href="assets/files/Linqiang_Guo_Resume_2026.pdf?v=49" target="_blank" rel="noopener">Résumé (PDF)</a>
         </div>
       </div>
     </section>
@@ -463,6 +550,6 @@
   <!-- custom cursor ring (shown only on fine-pointer devices) -->
   <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
 
-  <script src="assets/js/editorial.js?v=48"></script>
+  <script src="assets/js/editorial.js?v=49"></script>
 </body>
 </html>
