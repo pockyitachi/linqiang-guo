@@ -334,19 +334,6 @@ a.badge--soft:hover { color: var(--paper); border-color: color-mix(in srgb, var(
 .contact__socials a { font-weight: 600; color: var(--paper-soft); transition: color 0.2s; }
 .contact__socials a:hover { color: var(--paper); }
 
-/* ===== Marquee band (research-theme ticker) ===== */
-.marquee { position: relative; overflow: hidden; border-top: 1px solid var(--line); padding: 26px 0; }
-.marquee__track { display: flex; align-items: center; gap: 34px; width: max-content; animation: marquee 46s linear infinite; }
-.marquee:hover .marquee__track { animation-play-state: paused; }
-.marquee__track span {
-  font-family: var(--font-display); font-size: clamp(1.9rem, 4.2vw, 3.4rem); line-height: 1.05;
-  text-transform: uppercase; letter-spacing: 0.01em; white-space: nowrap; color: var(--paper);
-}
-.marquee__track span.is-outline { color: transparent; -webkit-text-stroke: 1px color-mix(in srgb, var(--paper) 70%, transparent); }
-.marquee .marquee__star { width: clamp(22px, 2.6vw, 34px); height: clamp(22px, 2.6vw, 34px); animation: spin 14s linear infinite; }
-@keyframes marquee { to { transform: translateX(calc(-50% - 17px)); } }
-@keyframes spin { to { transform: rotate(360deg); } }
-
 /* ===== Ghost section numerals — outlined, lit by the cursor ===== */
 .section__head[data-num] { position: relative; isolation: isolate; }
 .section__head[data-num]::after {
