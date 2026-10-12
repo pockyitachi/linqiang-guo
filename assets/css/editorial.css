@@ -90,12 +90,6 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 400; line-height
 }
 
 .bigtitle { font-size: clamp(1.9rem, 5vw, 3.6rem); text-transform: uppercase; margin-bottom: 8px; }
-/* editorial mix: one word per title set in Fraunces italic */
-.bigtitle em {
-  font-family: "Fraunces", Georgia, serif; font-style: italic; font-weight: 400;
-  font-variation-settings: "opsz" 144; text-transform: none;
-  font-size: 1.12em; letter-spacing: -0.02em; line-height: 0.9; padding-right: 0.06em;
-}
 .section__head { margin-bottom: 44px; }
 .section__head .eyebrow { display: block; margin-bottom: 14px; }
 
@@ -263,7 +257,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 400; line-height
 .stack__row:hover .stack__glyph { animation: ico-draw 1.1s cubic-bezier(.5,0,.2,1) both; }
 @keyframes ico-draw { from { stroke-dasharray: 1; stroke-dashoffset: 1; } to { stroke-dasharray: 1; stroke-dashoffset: 0; } }
 .stack__head h3 { font-size: clamp(1.6rem, 2.6vw, 2.3rem); text-transform: uppercase; letter-spacing: 0.015em; }
-.stack__head p { margin-top: 8px; font-family: "Fraunces", Georgia, serif; font-style: italic; font-size: 1rem; color: var(--paper-soft); }
+.stack__head p { margin-top: 8px; font-style: italic; font-weight: 500; font-size: 0.98rem; color: var(--paper-soft); }
 .stack__tags { list-style: none; display: flex; flex-wrap: wrap; align-items: baseline; row-gap: 6px; }
 .stack__tags li { font-size: 1.04rem; font-weight: 500; color: var(--paper-soft); transition: color 0.25s; }
 .stack__tags li:not(:last-child)::after {
