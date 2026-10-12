@@ -114,8 +114,10 @@
     var RADIUS = 170;       // cursor influence radius
     var dots = [];
     var W = 0, H = 0;
-    // iridescent palette (matches the CSS --c1..--c4)
-    var palette = [[255, 46, 154], [124, 77, 255], [24, 199, 255], [255, 210, 63]];
+    // palettes match the CSS --c1..--c4: iridescent at night, espresso/gold by day
+    var PAL_DARK = [[255, 46, 154], [124, 77, 255], [24, 199, 255], [255, 210, 63]];
+    var PAL_LIGHT = [[164, 71, 31], [176, 125, 44], [122, 74, 34], [212, 162, 76]];
+    function palette() { return theme === "light" ? PAL_LIGHT : PAL_DARK; }
     // resting dot colour differs by theme so dots stay visible on light bg
     function baseColour() { return theme === "light" ? [120, 120, 138] : [150, 150, 165]; }
 
@@ -133,8 +135,7 @@
       var oy = (H - (rows - 1) * SPACING) / 2;
       for (var r = 0; r < rows; r++) {
         for (var c = 0; c < cols; c++) {
-          var col = palette[(r + c) % palette.length];
-          dots.push({ bx: ox + c * SPACING, by: oy + r * SPACING, col: col });
+          dots.push({ bx: ox + c * SPACING, by: oy + r * SPACING, ci: (r + c) % 4 });
         }
       }
     }
@@ -144,7 +145,7 @@
     function tick() {
       sx += (mx - sx) * 0.16; sy += (my - sy) * 0.16;
       ctx.clearRect(0, 0, W, H);
-      var BASE = baseColour();
+      var BASE = baseColour(), PAL = palette();
       for (var i = 0; i < dots.length; i++) {
         var d = dots[i];
         var dx = d.bx - sx, dy = d.by - sy;
@@ -157,9 +158,10 @@
         var y = d.by + Math.sin(ang) * push;
         var size = 1.7 + t * 2.8;          // bigger dots overall
         var a = 0.16 + t * 0.84;           // a touch more visible at rest
-        var rr = Math.round(lerp(BASE[0], d.col[0], t));
-        var gg = Math.round(lerp(BASE[1], d.col[1], t));
-        var bb = Math.round(lerp(BASE[2], d.col[2], t));
+        var col = PAL[d.ci];
+        var rr = Math.round(lerp(BASE[0], col[0], t));
+        var gg = Math.round(lerp(BASE[1], col[1], t));
+        var bb = Math.round(lerp(BASE[2], col[2], t));
         ctx.beginPath();
         ctx.fillStyle = "rgba(" + rr + "," + gg + "," + bb + "," + a + ")";
         ctx.arc(x, y, size, 0, Math.PI * 2);
@@ -193,7 +195,8 @@
     var mctx = meteor.getContext("2d");
     var mdpr = Math.min(window.devicePixelRatio || 1, 2);
     var mW = 0, mH = 0, maxTiles = 72;
-    var pal = [[255, 46, 154], [124, 77, 255], [24, 199, 255], [255, 210, 63]];
+    var MPAL_DARK = [[255, 46, 154], [124, 77, 255], [24, 199, 255], [255, 210, 63]];
+    var MPAL_LIGHT = [[164, 71, 31], [176, 125, 44], [122, 74, 34], [212, 162, 76]];
     var MTILE = 16, MLIFE = 520;
     var tiles = [];
     var ptrX = window.innerWidth / 2, ptrY = window.innerHeight / 2; // raw pointer
@@ -213,7 +216,7 @@
       var tx = Math.round(x / MTILE) * MTILE, ty = Math.round(y / MTILE) * MTILE;
       var last = tiles[tiles.length - 1];
       if (!last || last.tx !== tx || last.ty !== ty) {
-        tiles.push({ tx: tx, ty: ty, born: performance.now(), col: pal[(palIdx++) % pal.length] });
+        tiles.push({ tx: tx, ty: ty, born: performance.now(), ci: (palIdx++) % 4 });
         if (tiles.length > maxTiles) tiles.shift();
       }
     }
@@ -242,26 +245,28 @@
       hx += (ptrX - hx) * 0.32; hy += (ptrY - hy) * 0.32;
       mctx.clearRect(0, 0, mW, mH);
       var now = performance.now();
+      var day = theme === "light", pal = day ? MPAL_LIGHT : MPAL_DARK;
 
       // tapering, glowing mosaic tail (newer tiles are larger & brighter)
       for (var i = tiles.length - 1; i >= 0; i--) {
-        var p = tiles[i];
+        var p = tiles[i], col = pal[p.ci];
         var k = 1 - (now - p.born) / MLIFE;
         if (k <= 0) { tiles.splice(i, 1); continue; }
         var s = 3 + (MTILE - 2) * k;
         mctx.shadowBlur = 12 * k * glow;
-        mctx.shadowColor = "rgba(" + p.col[0] + "," + p.col[1] + "," + p.col[2] + ",0.9)";
-        mctx.fillStyle = "rgba(" + p.col[0] + "," + p.col[1] + "," + p.col[2] + "," + (k * 0.85) + ")";
+        mctx.shadowColor = "rgba(" + col[0] + "," + col[1] + "," + col[2] + ",0.9)";
+        mctx.fillStyle = "rgba(" + col[0] + "," + col[1] + "," + col[2] + "," + (k * 0.85) + ")";
         mctx.fillRect(p.tx - s / 2, p.ty - s / 2, s, s);
       }
 
       // bright meteor head at the smoothed cursor position
       if (mActive) {
-        mctx.shadowBlur = 22 * glow; mctx.shadowColor = "rgba(255,90,170,0.95)";
+        var mid = day ? "rgba(196,140,60,0.95)" : "rgba(255,90,170,0.95)";
+        mctx.shadowBlur = 22 * glow; mctx.shadowColor = mid;
         var g = mctx.createRadialGradient(hx, hy, 0, hx, hy, 10);
-        g.addColorStop(0, "rgba(255,255,255,0.98)");
-        g.addColorStop(0.45, "rgba(255,90,170,0.95)");
-        g.addColorStop(1, "rgba(124,77,255,0)");
+        g.addColorStop(0, day ? "rgba(255,246,228,0.98)" : "rgba(255,255,255,0.98)");
+        g.addColorStop(0.45, mid);
+        g.addColorStop(1, day ? "rgba(122,74,34,0)" : "rgba(124,77,255,0)");
         mctx.fillStyle = g;
         mctx.beginPath(); mctx.arc(hx, hy, 10, 0, Math.PI * 2); mctx.fill();
       }
@@ -308,6 +313,65 @@
     reveals.forEach(function (el) { io.observe(el); });
   } else {
     reveals.forEach(function (el) { el.classList.add("is-visible"); });
+  }
+
+  /* --------------------------------------------------------
+     5b. NEWS — show the latest five, fold the rest behind a toggle
+     -------------------------------------------------------- */
+  var newsList = document.querySelector("#news .news");
+  if (newsList) {
+    var newsItems = newsList.querySelectorAll(".news__item");
+    var KEEP = 5;
+    if (newsItems.length > KEEP) {
+      for (var n = KEEP; n < newsItems.length; n++) newsItems[n].classList.add("is-folded");
+      var moreBtn = document.createElement("button");
+      moreBtn.type = "button";
+      moreBtn.className = "news__more";
+      moreBtn.setAttribute("aria-expanded", "false");
+      var moreLabel = function (open) { return open ? "Show less" : "Show all news (" + (newsItems.length - KEEP) + " more)"; };
+      moreBtn.innerHTML = "<span>" + moreLabel(false) + "</span><i aria-hidden=\"true\">↓</i>";
+      moreBtn.addEventListener("click", function () {
+        var open = newsList.classList.toggle("is-open");
+        moreBtn.setAttribute("aria-expanded", open ? "true" : "false");
+        moreBtn.querySelector("span").textContent = moreLabel(open);
+        if (!open) moreBtn.scrollIntoView({ block: "nearest" });
+      });
+      newsList.parentNode.insertBefore(moreBtn, newsList.nextSibling);
+    }
+  }
+
+  /* --------------------------------------------------------
+     5c. PUBLICATION FIGURE PREVIEW (desktop hover)
+     Rows with data-preview float their teaser figure next to the
+     cursor, eased like the meteor head.
+     -------------------------------------------------------- */
+  var preview = document.getElementById("pubPreview");
+  if (preview && finePointer) {
+    var pImg = preview.querySelector("img");
+    var PW = 400, GAP = 28;
+    var tx = 0, ty = 0, cx = 0, cy = 0, pOn = false, pLoop = false;
+    function placePreview() {
+      cx += (tx - cx) * 0.18; cy += (ty - cy) * 0.18;
+      var ph = preview.offsetHeight || 180;
+      // sit above-right of the cursor so the hovered row stays readable
+      var x = cx + GAP; if (x + PW > window.innerWidth - 12) x = cx - GAP - PW;
+      var y = cy - ph - GAP; if (y < 80) y = cy + GAP;
+      y = Math.max(12, Math.min(window.innerHeight - ph - 12, y));
+      preview.style.transform = "translate3d(" + x + "px," + y + "px,0)";
+      if (pOn || Math.abs(tx - cx) + Math.abs(ty - cy) > 0.5) requestAnimationFrame(placePreview);
+      else pLoop = false;
+    }
+    document.querySelectorAll(".pub[data-preview]").forEach(function (row) {
+      row.addEventListener("pointerenter", function (e) {
+        var src = row.getAttribute("data-preview");
+        if (pImg.getAttribute("src") !== src) pImg.setAttribute("src", src);
+        tx = cx = e.clientX; ty = cy = e.clientY;
+        pOn = true; preview.classList.add("is-on");
+        if (!pLoop) { pLoop = true; requestAnimationFrame(placePreview); }
+      });
+      row.addEventListener("pointerleave", function () { pOn = false; preview.classList.remove("is-on"); });
+    });
+    window.addEventListener("pointermove", function (e) { tx = e.clientX; ty = e.clientY; }, { passive: true });
   }
 
   /* --------------------------------------------------------

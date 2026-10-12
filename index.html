@@ -7,9 +7,9 @@
   <meta name="description" content="Linqiang Guo — PhD researcher in Software Engineering at Concordia University. AI-driven mobile automation, LLM agents, multimodal VLM post-training." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:ital,wght@0,400..800;1,400..800&family=Fraunces:opsz,wght@9..144,400..700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:ital,wght@0,400..800;1,400..800&family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&display=swap" rel="stylesheet" />
   <link rel="icon" href="assets/img/favicon-lg.svg?v=7" type="image/svg+xml" />
-  <link rel="stylesheet" href="assets/css/editorial.css?v=50" />
+  <link rel="stylesheet" href="assets/css/editorial.css?v=51" />
 </head>
 <body>
   <!-- custom line-icon set (gradient monoline, matches the LG mark) -->
@@ -105,7 +105,7 @@
         <a href="#contact">Contact</a>
       </nav>
       <div class="nav__actions">
-        <a href="assets/files/Linqiang_Guo_Resume_2026.pdf?v=50" class="btn btn--sm" target="_blank" rel="noopener">CV</a>
+        <a href="assets/files/Linqiang_Guo_Resume_2026.pdf?v=51" class="btn btn--sm" target="_blank" rel="noopener">CV</a>
         <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode"><svg class="ico ico--sun" aria-hidden="true"><use href="#i-sun"/></svg><svg class="ico ico--moon" aria-hidden="true"><use href="#i-moon"/></svg></button>
         <button class="nav__burger" id="navBurger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
       </div>
@@ -130,7 +130,7 @@
           </p>
           <div class="hero__cta">
             <a href="#publications" class="btn btn--primary">View publications</a>
-            <a href="assets/files/Linqiang_Guo_Resume_2026.pdf?v=50" class="btn btn--ghost" target="_blank" rel="noopener">Download CV ↓</a>
+            <a href="assets/files/Linqiang_Guo_Resume_2026.pdf?v=51" class="btn btn--ghost" target="_blank" rel="noopener">Download CV ↓</a>
           </div>
           <div class="hero__socials">
             <a href="https://github.com/pockyitachi" target="_blank" rel="noopener">GitHub</a>
@@ -140,7 +140,8 @@
         <div class="hero__media">
           <!-- portrait in full colour with a subtle iridescent frame -->
           <figure class="portrait">
-            <img src="assets/img/portrait.jpg?v=11" alt="Portrait of Linqiang Guo" />
+            <div class="portrait__frame"><img src="assets/img/portrait.jpg?v=11" alt="Portrait of Linqiang Guo" /></div>
+            <figcaption>Fig. 1 — Montreal, 2026</figcaption>
           </figure>
         </div>
       </div>
@@ -151,7 +152,7 @@
       <div class="container">
         <div class="section__head" data-num="01">
           <span class="eyebrow">01 — News</span>
-          <h2 class="bigtitle">Latest News</h2>
+          <h2 class="bigtitle">Latest <em>News</em></h2>
         </div>
         <ul class="news">
           <li class="news__item" data-reveal>
@@ -264,7 +265,7 @@
       <div class="container">
         <div class="section__head" data-num="03">
           <span class="eyebrow">03 — Skills</span>
-          <h2 class="bigtitle">Tools &amp; Tech</h2>
+          <h2 class="bigtitle">Tools &amp; <em>Tech</em></h2>
         </div>
         <ol class="stack">
           <li class="stack__row" data-reveal>
@@ -294,12 +295,12 @@
       <div class="container">
         <div class="section__head" data-num="04">
           <span class="eyebrow">04 — Publications</span>
-          <h2 class="bigtitle">Selected Papers</h2>
+          <h2 class="bigtitle">Selected <em>Papers</em></h2>
         </div>
         <ul class="pubs">
           <li class="pub" data-reveal>
             <span class="pub__no"></span>
-            <span class="pub__venue"><a class="badge badge--hot" href="https://mda-workshop.allen.ai/" target="_blank" rel="noopener">ECCV 2026 WS</a></span>
+            <span class="pub__venue"><a class="badge badge--hot badge--award" href="https://mda-workshop.allen.ai/" target="_blank" rel="noopener">ECCV 2026 WS</a></span>
             <div class="pub__body">
               <h3>Learning to Adapt: Few-Shot Generalization of Mobile Agents to Unseen Applications</h3>
               <p class="pub__authors">Siobhan Reid, Li Gu, Zhixiang Chi, <strong>Linqiang Guo</strong>, Zihuan Jiang, Ziqiang Wang, Yuanhao Yu, Yang Wang</p>
@@ -333,7 +334,7 @@
               <p class="pub__note">ECCV 2026 Workshop on Multimodal Digital Agents (MDA) · Poster · <a href="https://arxiv.org/abs/2606.19388" target="_blank" rel="noopener">arXiv</a></p>
             </div>
           </li>
-          <li class="pub" data-reveal>
+          <li class="pub" data-reveal data-preview="assets/img/papers/agentpersonabench.jpg">
             <span class="pub__no"></span>
             <span class="pub__venue"><a class="badge badge--soft" href="https://arxiv.org/abs/2610.04379" target="_blank" rel="noopener">arXiv 2026</a></span>
             <div class="pub__body">
@@ -400,57 +401,67 @@
       <div class="container">
         <div class="section__head" data-num="05">
           <span class="eyebrow">05 — Experience</span>
-          <h2 class="bigtitle">Where I've Worked</h2>
+          <h2 class="bigtitle">Where I've <em>Worked</em></h2>
         </div>
-        <ol class="tl">
-          <li class="tl__item" data-reveal><div class="tl__dot"></div>
-            <span class="tl__date">Jul 2026 — Present</span>
-            <h4>Graduate Student Researcher · Mila — Quebec Artificial Intelligence Institute</h4>
-            <p>Montreal, Quebec, Canada</p>
-            <ul class="tl__points">
-              <li>Research on multimodal / GUI agents.</li>
-              <li>RL-based post-training for agentic models (GRPO, DPO).</li>
-            </ul>
+        <ol class="xp">
+          <li class="xp__row" data-reveal>
+            <div class="xp__org"><span class="xp__name">Mila</span><span class="xp__date is-now">Jul 2026 — Present</span></div>
+            <div class="xp__body">
+              <h3>Graduate Student Researcher</h3>
+              <p class="xp__meta">Mila — Quebec Artificial Intelligence Institute · Montreal, Quebec, Canada</p>
+              <ul class="xp__points">
+                <li>Research on multimodal / GUI agents.</li>
+                <li>RL-based post-training for agentic models (GRPO, DPO).</li>
+              </ul>
+            </div>
           </li>
-          <li class="tl__item" data-reveal><div class="tl__dot"></div>
-            <span class="tl__date">Jan 2024 — Present</span>
-            <h4>Research Assistant · SPEAR Lab</h4>
-            <p>Software Performance, Engineering, Analysis &amp; Reliability Lab · Montreal, Canada</p>
-            <ul class="tl__points">
-              <li>Research intelligent mobile software systems with a focus on AI-driven automation and UI understanding.</li>
-              <li>Develop methods to improve agent reasoning, state awareness, and robustness in complex mobile environments.</li>
-              <li>Co-authored multiple papers at AAAI, ICSE, TOSEM, and COLM.</li>
-            </ul>
+          <li class="xp__row" data-reveal>
+            <div class="xp__org"><span class="xp__name">SPEAR Lab</span><span class="xp__date is-now">Jan 2024 — Present</span></div>
+            <div class="xp__body">
+              <h3>Research Assistant</h3>
+              <p class="xp__meta">Software Performance, Engineering, Analysis &amp; Reliability Lab · Montreal, Canada</p>
+              <ul class="xp__points">
+                <li>Research intelligent mobile software systems with a focus on AI-driven automation and UI understanding.</li>
+                <li>Develop methods to improve agent reasoning, state awareness, and robustness in complex mobile environments.</li>
+                <li>Co-authored multiple papers at AAAI, ICSE, TOSEM, and COLM.</li>
+              </ul>
+            </div>
           </li>
-          <li class="tl__item" data-reveal><div class="tl__dot"></div>
-            <span class="tl__date">Jan 2025 — Jan 2026</span>
-            <h4>Teaching Assistant · Concordia University</h4>
-            <p>Montreal, Canada</p>
-            <ul class="tl__points">
-              <li>Assist teaching Software Engineering: software design, UML modeling, testing, project management.</li>
-              <li>Lead weekly tutorials and support students via office hours and online discussions.</li>
-              <li>Guide students through core SE concepts and GitHub-based project workflows.</li>
-            </ul>
+          <li class="xp__row" data-reveal>
+            <div class="xp__org"><span class="xp__name">Concordia</span><span class="xp__date">Jan 2025 — Jan 2026</span></div>
+            <div class="xp__body">
+              <h3>Teaching Assistant</h3>
+              <p class="xp__meta">Concordia University · Montreal, Canada</p>
+              <ul class="xp__points">
+                <li>Assist teaching Software Engineering: software design, UML modeling, testing, project management.</li>
+                <li>Lead weekly tutorials and support students via office hours and online discussions.</li>
+                <li>Guide students through core SE concepts and GitHub-based project workflows.</li>
+              </ul>
+            </div>
           </li>
-          <li class="tl__item" data-reveal><div class="tl__dot"></div>
-            <span class="tl__date">Aug 2022 — Dec 2023</span>
-            <h4>Software Developer · Walmart Global Tech</h4>
-            <p>Sunnyvale, California, USA · in contract</p>
-            <ul class="tl__points">
-              <li>Built and maintained microservices for customer personalization, data ingestion, and recommendation using Java, Spring, and cloud tools.</li>
-              <li>Optimized performance of the Milvus vector database on Kubernetes.</li>
-              <li>Integrated GenAI workflows into search, improving query understanding and relevance ranking.</li>
-              <li>Deployed scalable API endpoints and streamlined CI/CD with data science and platform teams.</li>
-            </ul>
+          <li class="xp__row" data-reveal>
+            <div class="xp__org"><span class="xp__name">Walmart</span><span class="xp__date">Aug 2022 — Dec 2023</span></div>
+            <div class="xp__body">
+              <h3>Software Developer</h3>
+              <p class="xp__meta">Walmart Global Tech · Sunnyvale, California, USA · in contract</p>
+              <ul class="xp__points">
+                <li>Built and maintained microservices for customer personalization, data ingestion, and recommendation using Java, Spring, and cloud tools.</li>
+                <li>Optimized performance of the Milvus vector database on Kubernetes.</li>
+                <li>Integrated GenAI workflows into search, improving query understanding and relevance ranking.</li>
+                <li>Deployed scalable API endpoints and streamlined CI/CD with data science and platform teams.</li>
+              </ul>
+            </div>
           </li>
-          <li class="tl__item" data-reveal><div class="tl__dot"></div>
-            <span class="tl__date">Jan 2020 — Feb 2020</span>
-            <h4>Software Engineer Intern · CPECC Gulf Region</h4>
-            <p>Abu Dhabi, United Arab Emirates</p>
-            <ul class="tl__points">
-              <li>Developed RESTful web services with Spring Boot, Spring MVC, Maven, and Hibernate.</li>
-              <li>Tested features with JUnit and Mockito; used Git/GitHub for version control and review.</li>
-            </ul>
+          <li class="xp__row" data-reveal>
+            <div class="xp__org"><span class="xp__name">CPECC</span><span class="xp__date">Jan 2020 — Feb 2020</span></div>
+            <div class="xp__body">
+              <h3>Software Engineer Intern</h3>
+              <p class="xp__meta">CPECC Gulf Region · Abu Dhabi, United Arab Emirates</p>
+              <ul class="xp__points">
+                <li>Developed RESTful web services with Spring Boot, Spring MVC, Maven, and Hibernate.</li>
+                <li>Tested features with JUnit and Mockito; used Git/GitHub for version control and review.</li>
+              </ul>
+            </div>
           </li>
         </ol>
       </div>
@@ -461,7 +472,7 @@
       <div class="container">
         <div class="section__head" data-num="06">
           <span class="eyebrow">06 — Honors &amp; Awards</span>
-          <h2 class="bigtitle">Honors &amp; Awards</h2>
+          <h2 class="bigtitle">Honors &amp; <em>Awards</em></h2>
         </div>
         <ul class="news">
           <li class="news__item" data-reveal>
@@ -485,7 +496,7 @@
       <div class="container">
         <div class="section__head" data-num="07">
           <span class="eyebrow">07 — Off the Clock</span>
-          <h2 class="bigtitle">Beyond Work</h2>
+          <h2 class="bigtitle">Beyond <em>Work</em></h2>
         </div>
         <a class="portal" href="life.html" data-reveal aria-label="Open my life gallery">
           <div class="portal__media">
@@ -504,17 +515,20 @@
     <section class="section contact" id="contact">
       <div class="container">
         <span class="eyebrow">08 — Contact</span>
-        <h2 class="bigtitle">Let's Connect</h2>
+        <h2 class="bigtitle">Let's <em>Connect</em></h2>
         <p class="contact__lead">Interested in collaborating on AI agents, mobile automation, or software-engineering research? I'd love to hear from you.</p>
         <a href="mailto:linqg327@gmail.com" class="btn btn--primary btn--lg">Email me →</a>
         <div class="contact__socials">
           <a href="https://github.com/pockyitachi" target="_blank" rel="noopener">GitHub</a>
           <a href="mailto:linqg327@gmail.com">linqg327@gmail.com</a>
-          <a href="assets/files/Linqiang_Guo_Resume_2026.pdf?v=50" target="_blank" rel="noopener">Résumé (PDF)</a>
+          <a href="assets/files/Linqiang_Guo_Resume_2026.pdf?v=51" target="_blank" rel="noopener">Résumé (PDF)</a>
         </div>
       </div>
     </section>
   </main>
+
+  <!-- floating paper-figure preview (desktop hover on publications with data-preview) -->
+  <div class="pub-preview" id="pubPreview" aria-hidden="true"><div class="pub-preview__card"><img alt="" /></div></div>
 
   <!-- ===== Footer ===== -->
   <footer class="footer">
@@ -531,6 +545,6 @@
   <!-- custom cursor ring (shown only on fine-pointer devices) -->
   <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
 
-  <script src="assets/js/editorial.js?v=50"></script>
+  <script src="assets/js/editorial.js?v=51"></script>
 </body>
 </html>
