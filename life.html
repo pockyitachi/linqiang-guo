@@ -8,8 +8,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:ital,wght@0,400..800;1,400..800&family=Fraunces:opsz,wght@9..144,400..700&display=swap" rel="stylesheet" />
+  <script>document.documentElement.classList.add("js");setTimeout(function(){var r=document.documentElement;if(!r.classList.contains("fx-ok"))r.classList.remove("js");},4000);</script>
   <link rel="icon" href="assets/img/favicon-lg.svg?v=7" type="image/svg+xml" />
-  <link rel="stylesheet" href="assets/css/editorial.css?v=55" />
+  <link rel="stylesheet" href="assets/css/editorial.css?v=56" />
 </head>
 <body>
   <!-- line icons for the theme toggle -->
@@ -40,15 +41,25 @@
       <a href="index.html#top" class="nav__brand" aria-label="Linqiang Guo — home">
         <img class="brandmark-img logo-dark" src="assets/img/logo-lg.svg?v=29" alt="LG" width="40" height="40" />
       </a>
-      <nav class="nav__links" id="navLinks" aria-label="Primary">
-        <a href="index.html#top">Home</a>
-        <a href="index.html#publications">Papers</a>
-        <a href="index.html#contact">Contact</a>
-      </nav>
+      <!-- Dynamic-Island style navigation: compact capsule that morphs open -->
+      <div class="island" id="island">
+        <div class="island__shell">
+          <button class="island__compact" id="islandToggle" type="button" aria-expanded="false" aria-controls="navLinks" aria-label="Open navigation">
+            <span class="island__dot" aria-hidden="true"></span>
+            <span class="island__label" id="islandLabel">Life with Pocky</span>
+            <svg class="island__ring" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5"/><circle class="island__ring-fill" cx="10" cy="10" r="7.5" pathLength="1"/></svg>
+          </button>
+          <nav class="island__links" id="navLinks" aria-label="Primary">
+            <span class="island__pill" aria-hidden="true"></span>
+            <a href="index.html#top">Home</a>
+            <a href="index.html#publications">Papers</a>
+            <a href="index.html#contact">Contact</a>
+          </nav>
+        </div>
+      </div>
       <div class="nav__actions">
         <a href="index.html" class="btn btn--sm">← Back</a>
         <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode"><svg class="ico ico--sun" aria-hidden="true"><use href="#i-sun"/></svg><svg class="ico ico--moon" aria-hidden="true"><use href="#i-moon"/></svg></button>
-        <button class="nav__burger" id="navBurger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
       </div>
     </div>
   </header>
@@ -57,9 +68,9 @@
     <!-- ===== Hero ===== -->
     <section class="hero life-hero">
       <div class="container">
-        <p class="hero__eyebrow eyebrow">Off the Clock</p>
-        <h1 class="hero__name">Life with <span class="hero__alias">Pocky</span></h1>
-        <p class="hero__lede">A few moments away from research — and Pocky, the very good dog who makes them better.</p>
+        <p class="hero__eyebrow eyebrow" data-intro style="--d:0">Off the Clock</p>
+        <h1 class="hero__name" data-intro style="--d:1">Life with Pocky</h1>
+        <p class="hero__lede" data-intro style="--d:2">A few moments away from research — and Pocky, the very good dog who makes them better.</p>
       </div>
     </section>
 
@@ -89,6 +100,6 @@
   </footer>
 
   <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
-  <script src="assets/js/editorial.js?v=55"></script>
+  <script src="assets/js/editorial.js?v=56"></script>
 </body>
 </html>
