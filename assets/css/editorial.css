@@ -127,10 +127,6 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 400; line-height
 .nav__brand { display: inline-flex; align-items: center; }
 .brandmark-img { display: block; width: 40px; height: 40px; transition: transform 0.2s ease; }
 .nav__brand:hover .brandmark-img { transform: translateY(-1px) rotate(-3deg); }
-/* day / night logo swap */
-.brandmark-img.logo-light { display: none; }
-[data-theme="light"] .brandmark-img.logo-dark { display: none; }
-[data-theme="light"] .brandmark-img.logo-light { display: block; }
 .nav__links { display: flex; gap: 26px; }
 .nav__links a {
   font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
