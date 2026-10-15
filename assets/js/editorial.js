@@ -5,6 +5,7 @@
   "use strict";
 
   var root = document.documentElement;
+  root.classList.add("fx-ok"); // tells the <head> fallback that this script loaded
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   /* --------------------------------------------------------
@@ -54,7 +55,7 @@
   var loader = document.getElementById("loader");
   if (loader) {
     var done = false;
-    function hideLoader() { if (!done) { done = true; loader.classList.add("is-done"); } }
+    function hideLoader() { if (!done) { done = true; loader.classList.add("is-done"); root.classList.add("is-ready"); } }
     if (reduceMotion) {
       hideLoader();
     } else {
@@ -64,6 +65,8 @@
       });
       setTimeout(hideLoader, 2600); // safety net if 'load' already fired
     }
+  } else {
+    root.classList.add("is-ready");
   }
 
   /* --------------------------------------------------------
@@ -287,15 +290,138 @@
   }
 
   /* --------------------------------------------------------
-     3. MOBILE NAV
+     3. DYNAMIC-ISLAND NAV
+     Compact: live dot + current section + scroll-progress ring.
+     Expanded (desktop, top of page or on hover): the nav links with
+     a pill that springs between them. Mobile: tapping the capsule
+     morphs it into a tall panel of links. JS measures the content
+     and the CSS springs the capsule to that size.
      -------------------------------------------------------- */
-  var burger = document.getElementById("navBurger");
-  var links = document.getElementById("navLinks");
-  if (burger && links) {
-    burger.addEventListener("click", function () { links.classList.toggle("open"); });
-    links.querySelectorAll("a").forEach(function (a) {
-      a.addEventListener("click", function () { links.classList.remove("open"); });
+  var island = document.getElementById("island");
+  if (island) {
+    var shell = island.querySelector(".island__shell");
+    var compact = document.getElementById("islandToggle");
+    var label = document.getElementById("islandLabel");
+    var linksBox = document.getElementById("navLinks");
+    var linkEls = Array.prototype.slice.call(linksBox.querySelectorAll("a"));
+    var navInner = island.parentNode;
+    var mqMobile = window.matchMedia("(max-width: 880px)");
+    var NAMES = { news: "News", about: "About", publications: "Papers", experience: "Experience",
+                  skills: "Skills", awards: "Awards", life: "Life", contact: "Contact" };
+    var tracked = Array.prototype.slice.call(document.querySelectorAll("main section[id]"))
+      .filter(function (s) { return NAMES[s.id]; });
+    var state = "", current = null, hovering = false, overLinks = false, hoverTimer = 0, swapTimer = 0;
+    linkEls.forEach(function (a, i) { a.style.setProperty("--i", i); });
+
+    var sizeIsland = function () {
+      var H = navInner.offsetHeight, w, h;
+      if (state === "open") {
+        w = linksBox.offsetWidth; h = linksBox.offsetHeight;
+        shell.style.setProperty("--it", Math.round((H - compact.offsetHeight) / 2) + "px");
+        shell.style.setProperty("--ir", "26px");
+      } else {
+        var el = state === "expanded" ? linksBox : compact;
+        w = el.offsetWidth; h = el.offsetHeight;
+        shell.style.setProperty("--it", Math.round((H - h) / 2) + "px");
+        shell.style.setProperty("--ir", "999px");
+      }
+      shell.style.setProperty("--iw", w + "px");
+      shell.style.setProperty("--ih", h + "px");
+    };
+    var activeLink = function () {
+      if (!current) return null;
+      for (var i = 0; i < linkEls.length; i++) if (linkEls[i].getAttribute("data-section") === current) return linkEls[i];
+      return null;
+    };
+    var movePill = function (a) {
+      if (!a || state !== "expanded") { linksBox.classList.remove("has-pill"); return; }
+      linksBox.style.setProperty("--px", a.offsetLeft + "px");
+      linksBox.style.setProperty("--pw", a.offsetWidth + "px");
+      linksBox.classList.add("has-pill");
+    };
+    var setState = function (s) {
+      if (s === state) return;
+      state = s;
+      island.classList.toggle("is-expanded", s !== "compact");
+      island.classList.toggle("is-open", s === "open");
+      compact.setAttribute("aria-expanded", s === "compact" ? "false" : "true");
+      sizeIsland();
+      movePill(activeLink());
+    };
+    var desired = function () {
+      if (mqMobile.matches) return state === "open" ? "open" : "compact";
+      return (window.scrollY < 140 || hovering) ? "expanded" : "compact";
+    };
+    var setLabel = function (text) {
+      if (label.textContent === text) return;
+      clearTimeout(swapTimer);
+      label.classList.add("is-swapping");
+      swapTimer = setTimeout(function () {
+        label.textContent = text;
+        label.classList.remove("is-swapping");
+        if (state === "compact") sizeIsland();
+      }, 180);
+    };
+
+    var islandTick = false;
+    var onIslandScroll = function () {
+      islandTick = false;
+      var max = document.documentElement.scrollHeight - window.innerHeight;
+      compact.style.setProperty("--progress", max > 0 ? Math.min(1, window.scrollY / max).toFixed(3) : "0");
+      if (tracked.length) {
+        var cur = null, line = window.innerHeight * 0.4;
+        for (var i = 0; i < tracked.length; i++) if (tracked[i].getBoundingClientRect().top <= line) cur = tracked[i].id;
+        if (cur !== current) {
+          current = cur;
+          setLabel(cur ? NAMES[cur] : "Home");
+          linkEls.forEach(function (a) { a.classList.toggle("is-active", a.getAttribute("data-section") === cur); });
+          if (!overLinks) movePill(activeLink());
+        }
+      }
+      setState(desired());
+    };
+    window.addEventListener("scroll", function () {
+      if (!islandTick) { islandTick = true; requestAnimationFrame(onIslandScroll); }
+    }, { passive: true });
+
+    // desktop: hover / keyboard focus expands the capsule
+    island.addEventListener("mouseenter", function () {
+      if (mqMobile.matches) return;
+      clearTimeout(hoverTimer); hovering = true; setState(desired());
     });
+    island.addEventListener("mouseleave", function () {
+      if (mqMobile.matches) return;
+      hoverTimer = setTimeout(function () { hovering = false; setState(desired()); }, 240);
+    });
+    island.addEventListener("focusin", function () { if (!mqMobile.matches) { hovering = true; setState(desired()); } });
+    island.addEventListener("focusout", function (e) {
+      if (!island.contains(e.relatedTarget) && !mqMobile.matches) { hovering = false; setState(desired()); }
+    });
+    linkEls.forEach(function (a) {
+      a.addEventListener("mouseenter", function () { overLinks = true; movePill(a); });
+      a.addEventListener("click", function () { if (state === "open") setState("compact"); });
+    });
+    linksBox.addEventListener("mouseleave", function () { overLinks = false; movePill(activeLink()); });
+
+    // tap the capsule: mobile opens the panel, desktop expands
+    compact.addEventListener("click", function (e) {
+      e.stopPropagation();
+      if (mqMobile.matches) setState(state === "open" ? "compact" : "open");
+      else { hovering = true; setState("expanded"); }
+    });
+    document.addEventListener("click", function (e) {
+      if (state === "open" && !island.contains(e.target)) setState("compact");
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && state === "open") { setState("compact"); compact.focus(); }
+    });
+    window.addEventListener("resize", function () {
+      if (!mqMobile.matches && state === "open") state = "";
+      setState(desired()); sizeIsland(); movePill(activeLink());
+    });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { sizeIsland(); movePill(activeLink()); });
+    onIslandScroll();
+    sizeIsland();
   }
 
   /* --------------------------------------------------------
@@ -312,8 +438,15 @@
   var reveals = document.querySelectorAll("[data-reveal]");
   if ("IntersectionObserver" in window) {
     var io = new IntersectionObserver(function (entries) {
+      // items entering together resolve in a short cascade
+      var n = 0;
       entries.forEach(function (en) {
-        if (en.isIntersecting) { en.target.classList.add("is-visible"); io.unobserve(en.target); }
+        if (!en.isIntersecting) return;
+        var el = en.target;
+        el.style.setProperty("--rd", (n++ * 0.08).toFixed(2) + "s");
+        el.classList.add("is-visible");
+        io.unobserve(el);
+        setTimeout(function () { el.style.removeProperty("--rd"); }, 1800);
       });
     }, { threshold: 0.12 });
     reveals.forEach(function (el) { io.observe(el); });
