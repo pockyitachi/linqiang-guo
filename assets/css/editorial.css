@@ -388,15 +388,19 @@ a.badge--soft:hover { color: var(--paper); border-color: color-mix(in srgb, var(
 
 /* floating figure preview that trails the cursor over a publication */
 .pub[data-preview] { cursor: zoom-in; }
-.pub-preview { position: fixed; left: 0; top: 0; z-index: 9985; width: 400px; pointer-events: none; opacity: 0; transition: opacity 0.25s ease, width 0.45s var(--spring); will-change: transform; }
+.pub-preview { position: fixed; left: 0; top: 0; z-index: 9985; width: 520px; pointer-events: none; opacity: 0; transition: opacity 0.25s ease; will-change: transform; }
 .pub-preview.is-on { opacity: 1; }
 .pub-preview__card {
   border-radius: 14px; overflow: hidden; background: #fff; border: 1px solid var(--line);
   box-shadow: 0 30px 80px rgba(0,0,0,0.5); transform: scale(0.9) rotate(-2.5deg);
-  transition: transform 0.45s cubic-bezier(.2,.7,.2,1);
+  transition: transform 0.45s cubic-bezier(.2,.7,.2,1), height 0.35s cubic-bezier(.2,.7,.2,1);
 }
 .pub-preview.is-on .pub-preview__card { transform: rotate(-1.2deg); }
-.pub-preview img { display: block; width: 100%; height: auto; }
+/* fixed width; JS eases the height to each figure's aspect ratio and the
+   two image layers cross-fade, so switching papers never makes it wobble */
+.pub-preview__card { position: relative; height: 240px; }
+.pub-preview img { position: absolute; left: 0; top: 0; display: block; width: 100%; height: auto; opacity: 0; transition: opacity 0.3s ease; }
+.pub-preview img.is-front { opacity: 1; }
 @media (hover: none) { .pub-preview { display: none; } }
 
 /* ===== Experience — editorial rows ===== */
