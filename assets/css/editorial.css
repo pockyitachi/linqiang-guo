@@ -177,8 +177,8 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 400; line-height
 
 /* portrait — clean photo, offset hairline frame, magazine-style caption */
 .hero__media { display: grid; place-items: center; }
-.portrait { position: relative; width: 300px; margin: 0; isolation: isolate; }
-.portrait__frame { height: 360px; border-radius: 18px; overflow: hidden; box-shadow: 0 30px 70px rgba(0,0,0,0.45); }
+.portrait { position: relative; width: min(300px, calc(100% - 16px)); margin: 0 16px 0 0; isolation: isolate; }
+.portrait__frame { aspect-ratio: 5 / 6; border-radius: 18px; overflow: hidden; box-shadow: 0 30px 70px rgba(0,0,0,0.45); }
 [data-theme="light"] .portrait__frame { box-shadow: 0 26px 60px rgba(30,30,50,0.18); }
 .portrait__frame img {
   width: 100%; height: 100%; object-fit: cover; object-position: center 18%;
@@ -186,7 +186,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 400; line-height
 }
 /* thin gradient outline sitting behind the photo, offset down-right */
 .portrait::before {
-  content: ""; position: absolute; left: 0; top: 0; width: 100%; height: 360px; z-index: -1;
+  content: ""; position: absolute; left: 0; top: 0; width: 100%; aspect-ratio: 5 / 6; z-index: -1;
   border-radius: 18px; padding: 1px; transform: translate(16px, 16px);
   background: linear-gradient(135deg, var(--c1), var(--c2), var(--c3));
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
@@ -196,7 +196,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 400; line-height
 .portrait:hover::before { transform: translate(8px, 8px); }
 .portrait:hover .portrait__frame img { transform: scale(1.04); }
 .portrait figcaption {
-  display: flex; align-items: center; gap: 12px; margin-top: 30px;
+  display: flex; align-items: center; gap: 12px; margin-top: 30px; white-space: nowrap;
   font-size: 0.7rem; font-weight: 600; letter-spacing: 0.26em; text-transform: uppercase; color: var(--paper-soft);
 }
 .portrait figcaption::before { content: ""; width: 28px; height: 1px; background: currentColor; opacity: 0.6; }
