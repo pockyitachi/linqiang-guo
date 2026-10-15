@@ -486,45 +486,65 @@
      -------------------------------------------------------- */
   var preview = document.getElementById("pubPreview");
   if (preview && finePointer) {
-    var pImg = preview.querySelector("img");
-    var PW = 400, GAP = 28;
-    var tx = 0, ty = 0, cx = 0, cy = 0, pOn = false, pLoop = false, curRow = null;
-    // wide strip-like figures get a wider card so they stay legible
-    function fitPreview() {
-      var ar = pImg.naturalWidth / pImg.naturalHeight;
-      PW = ar > 3.2 ? 600 : ar > 2.4 ? 520 : 420;
-      preview.style.width = PW + "px";
-    }
-    pImg.addEventListener("load", fitPreview);
-    function placePreview() {
-      var ph = preview.offsetHeight || 180;
-      // follow the cursor horizontally, but sit just above the hovered
-      // row (or below it near the top) so its title stays readable
-      if (curRow) {
-        var r = curRow.getBoundingClientRect();
-        ty = r.top - ph - 14; if (ty < 76) ty = r.bottom + 14;
-      }
-      cx += (tx - cx) * 0.18; cy += (ty - cy) * 0.18;
-      var x = Math.max(12, Math.min(window.innerWidth - PW - 12, cx - PW * 0.35));
-      var y = Math.max(12, Math.min(window.innerHeight - ph - 12, cy));
-      preview.style.transform = "translate3d(" + x + "px," + y + "px,0)";
-      if (pOn || Math.abs(tx - cx) + Math.abs(ty - cy) > 0.5) requestAnimationFrame(placePreview);
-      else pLoop = false;
-    }
+    var card = preview.querySelector(".pub-preview__card");
+    var layers = card.querySelectorAll("img");
+    var front = 0, PW = 520, side = 1;
+    var tx = 0, ty = 0, cx = 0, cy = 0;
+    var visible = false, running = false, hideTimer = 0, hiddenAt = 0, wantSrc = "";
+
+    var bringForward = function (img) {
+      if (img.getAttribute("src") !== wantSrc) return;        // a newer hover won
+      card.style.height = Math.round(PW * img.naturalHeight / img.naturalWidth) + "px";
+      if (img === layers[front]) return;
+      layers[front].classList.remove("is-front");
+      img.classList.add("is-front");
+      front = front ? 0 : 1;
+    };
+    var setFigure = function (src) {
+      wantSrc = src;
+      var cur = layers[front], next = layers[front ? 0 : 1];
+      if (cur.getAttribute("src") === src) { bringForward(cur); return; }
+      next.onload = function () { bringForward(next); };
+      if (next.getAttribute("src") !== src) next.setAttribute("src", src);
+      else if (next.complete && next.naturalWidth) bringForward(next);
+    };
+
+    // eased follow: the card rides beside the cursor, vertically centred on
+    // it and clamped to the viewport. Its side (right or left of the cursor)
+    // is chosen once per hover, so it never flips across the pointer.
+    var follow = function () {
+      cx += (tx - cx) * 0.2; cy += (ty - cy) * 0.2;
+      var ph = card.offsetHeight || 200;
+      var x = side > 0 ? cx + 36 : cx - 36 - PW;
+      x = Math.max(14, Math.min(window.innerWidth - PW - 14, x));
+      var y = Math.max(80, Math.min(window.innerHeight - ph - 14, cy - ph / 2));
+      preview.style.transform = "translate3d(" + x.toFixed(1) + "px," + y.toFixed(1) + "px,0)";
+      if (visible || Date.now() - hiddenAt < 400) requestAnimationFrame(follow);
+      else running = false;
+    };
+
     document.querySelectorAll(".pub[data-preview]").forEach(function (row) {
       row.addEventListener("pointerenter", function (e) {
-        var src = row.getAttribute("data-preview");
-        if (pImg.getAttribute("src") !== src) pImg.setAttribute("src", src);
-        if (pImg.complete && pImg.naturalWidth) fitPreview();
-        var fresh = !pOn && !preview.classList.contains("is-on");
-        curRow = row; tx = e.clientX;
-        if (fresh) { cx = tx; var r0 = row.getBoundingClientRect(); cy = r0.top - (preview.offsetHeight || 180) - 14; if (cy < 76) cy = r0.bottom + 14; }
-        pOn = true; preview.classList.add("is-on");
-        if (!pLoop) { pLoop = true; requestAnimationFrame(placePreview); }
+        clearTimeout(hideTimer);
+        tx = e.clientX; ty = e.clientY;
+        // only jump to the cursor if the card has fully faded out
+        if (!visible && Date.now() - hiddenAt > 300) {
+          cx = tx; cy = ty;
+          side = (tx + 36 + PW <= window.innerWidth - 14) ? 1 : -1;
+        }
+        setFigure(row.getAttribute("data-preview"));
+        visible = true; preview.classList.add("is-on");
+        if (!running) { running = true; requestAnimationFrame(follow); }
       });
-      row.addEventListener("pointerleave", function () { pOn = false; preview.classList.remove("is-on"); });
+      // short grace period so gliding to the next paper keeps the card up
+      row.addEventListener("pointerleave", function () {
+        clearTimeout(hideTimer);
+        hideTimer = setTimeout(function () {
+          visible = false; hiddenAt = Date.now(); preview.classList.remove("is-on");
+        }, 140);
+      });
     });
-    window.addEventListener("pointermove", function (e) { tx = e.clientX; }, { passive: true });
+    window.addEventListener("pointermove", function (e) { tx = e.clientX; ty = e.clientY; }, { passive: true });
   }
 
   /* --------------------------------------------------------
