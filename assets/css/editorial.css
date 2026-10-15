@@ -143,6 +143,10 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 400; line-height
 .nav__brand { display: inline-flex; align-items: center; }
 .brandmark-img { display: block; width: 40px; height: 40px; transition: transform 0.2s ease; }
 .nav__brand:hover .brandmark-img { transform: translateY(-1px) rotate(-3deg); }
+/* day / night logo: the mark follows the active theme palette */
+.brandmark-img.logo-light { display: none; }
+[data-theme="light"] .brandmark-img.logo-dark { display: none; }
+[data-theme="light"] .brandmark-img.logo-light { display: block; filter: drop-shadow(0 4px 12px rgba(98,70,201,0.16)); }
 .nav__actions { display: flex; align-items: center; gap: 12px; }
 .theme-toggle {
   width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--line);
