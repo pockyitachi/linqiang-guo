@@ -21,12 +21,12 @@
 
 /* ---- Light / day theme ---- */
 [data-theme="light"] {
-  --ink: #f4f1ea;        /* light base (used as background) */
+  --ink: #f6f6f8;        /* cool off-white base (used as background) */
   --paper: #18181d;      /* dark text                       */
   --paper-soft: rgba(24,24,29,0.82);
   --line: rgba(24,24,29,0.14);
-  /* warm espresso / bronze / gold accents to match the day logo */
-  --c1: #a4471f;  --c2: #7a4a22;  --c3: #b07d2c;  --c4: #d4a24c;
+  /* deep jewel accents: the night palette, darkened to sit on paper */
+  --c1: #c2416f;  --c2: #6246c9;  --c3: #1f7fb8;  --c4: #2a9d8f;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -183,7 +183,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 400; line-height
 .hero__media { display: grid; place-items: center; }
 .portrait { position: relative; width: 300px; margin: 0; isolation: isolate; }
 .portrait__frame { height: 360px; border-radius: 18px; overflow: hidden; box-shadow: 0 30px 70px rgba(0,0,0,0.45); }
-[data-theme="light"] .portrait__frame { box-shadow: 0 26px 60px rgba(60,40,20,0.22); }
+[data-theme="light"] .portrait__frame { box-shadow: 0 26px 60px rgba(30,30,50,0.18); }
 .portrait__frame img {
   width: 100%; height: 100%; object-fit: cover; object-position: center 18%;
   display: block; transition: transform 0.6s ease;
