@@ -240,9 +240,9 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 400; line-height
 .hero__eyebrow b { color: var(--paper); }
 /* giant name filled with cursor-following iridescent colour (toned down in size) */
 .hero__name {
-  font-family: "Fraunces", Georgia, serif;
-  font-weight: 700; font-optical-sizing: auto; font-style: normal;
-  font-size: clamp(1.4rem, 5.4vw, 3.4rem); line-height: 1.2; letter-spacing: -0.015em;
+  font-family: "Inter Tight", "Archivo", system-ui, sans-serif;
+  font-weight: 700; font-style: normal;
+  font-size: clamp(1.5rem, 5.8vw, 3.6rem); line-height: 1.15; letter-spacing: -0.035em;
   text-transform: none; white-space: nowrap; margin-bottom: 14px; padding-bottom: 0.1em;
   overflow: visible;
   background: radial-gradient(circle 340px at var(--mx) var(--my),
