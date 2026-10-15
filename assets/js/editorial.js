@@ -468,7 +468,7 @@
       moreBtn.className = "news__more";
       moreBtn.setAttribute("aria-expanded", "false");
       var moreLabel = function (open) { return open ? "Show less" : "Show all news (" + (newsItems.length - KEEP) + " more)"; };
-      moreBtn.innerHTML = "<span>" + moreLabel(false) + "</span><i aria-hidden=\"true\">↓</i>";
+      moreBtn.innerHTML = "<span>" + moreLabel(false) + "</span>";
       moreBtn.addEventListener("click", function () {
         var open = newsList.classList.toggle("is-open");
         moreBtn.setAttribute("aria-expanded", open ? "true" : "false");
@@ -488,14 +488,25 @@
   if (preview && finePointer) {
     var pImg = preview.querySelector("img");
     var PW = 400, GAP = 28;
-    var tx = 0, ty = 0, cx = 0, cy = 0, pOn = false, pLoop = false;
+    var tx = 0, ty = 0, cx = 0, cy = 0, pOn = false, pLoop = false, curRow = null;
+    // wide strip-like figures get a wider card so they stay legible
+    function fitPreview() {
+      var ar = pImg.naturalWidth / pImg.naturalHeight;
+      PW = ar > 3.2 ? 600 : ar > 2.4 ? 520 : 420;
+      preview.style.width = PW + "px";
+    }
+    pImg.addEventListener("load", fitPreview);
     function placePreview() {
-      cx += (tx - cx) * 0.18; cy += (ty - cy) * 0.18;
       var ph = preview.offsetHeight || 180;
-      // sit above-right of the cursor so the hovered row stays readable
-      var x = cx + GAP; if (x + PW > window.innerWidth - 12) x = cx - GAP - PW;
-      var y = cy - ph - GAP; if (y < 80) y = cy + GAP;
-      y = Math.max(12, Math.min(window.innerHeight - ph - 12, y));
+      // follow the cursor horizontally, but sit just above the hovered
+      // row (or below it near the top) so its title stays readable
+      if (curRow) {
+        var r = curRow.getBoundingClientRect();
+        ty = r.top - ph - 14; if (ty < 76) ty = r.bottom + 14;
+      }
+      cx += (tx - cx) * 0.18; cy += (ty - cy) * 0.18;
+      var x = Math.max(12, Math.min(window.innerWidth - PW - 12, cx - PW * 0.35));
+      var y = Math.max(12, Math.min(window.innerHeight - ph - 12, cy));
       preview.style.transform = "translate3d(" + x + "px," + y + "px,0)";
       if (pOn || Math.abs(tx - cx) + Math.abs(ty - cy) > 0.5) requestAnimationFrame(placePreview);
       else pLoop = false;
@@ -504,13 +515,16 @@
       row.addEventListener("pointerenter", function (e) {
         var src = row.getAttribute("data-preview");
         if (pImg.getAttribute("src") !== src) pImg.setAttribute("src", src);
-        tx = cx = e.clientX; ty = cy = e.clientY;
+        if (pImg.complete && pImg.naturalWidth) fitPreview();
+        var fresh = !pOn && !preview.classList.contains("is-on");
+        curRow = row; tx = e.clientX;
+        if (fresh) { cx = tx; var r0 = row.getBoundingClientRect(); cy = r0.top - (preview.offsetHeight || 180) - 14; if (cy < 76) cy = r0.bottom + 14; }
         pOn = true; preview.classList.add("is-on");
         if (!pLoop) { pLoop = true; requestAnimationFrame(placePreview); }
       });
       row.addEventListener("pointerleave", function () { pOn = false; preview.classList.remove("is-on"); });
     });
-    window.addEventListener("pointermove", function (e) { tx = e.clientX; ty = e.clientY; }, { passive: true });
+    window.addEventListener("pointermove", function (e) { tx = e.clientX; }, { passive: true });
   }
 
   /* --------------------------------------------------------

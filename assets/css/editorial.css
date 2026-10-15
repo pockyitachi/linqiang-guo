@@ -388,7 +388,7 @@ a.badge--soft:hover { color: var(--paper); border-color: color-mix(in srgb, var(
 
 /* floating figure preview that trails the cursor over a publication */
 .pub[data-preview] { cursor: zoom-in; }
-.pub-preview { position: fixed; left: 0; top: 0; z-index: 9985; width: 400px; pointer-events: none; opacity: 0; transition: opacity 0.25s ease; will-change: transform; }
+.pub-preview { position: fixed; left: 0; top: 0; z-index: 9985; width: 400px; pointer-events: none; opacity: 0; transition: opacity 0.25s ease, width 0.45s var(--spring); will-change: transform; }
 .pub-preview.is-on { opacity: 1; }
 .pub-preview__card {
   border-radius: 14px; overflow: hidden; background: #fff; border: 1px solid var(--line);
@@ -434,9 +434,7 @@ a.badge--soft:hover { color: var(--paper); border-color: color-mix(in srgb, var(
   color: var(--paper-soft); cursor: pointer; transition: color 0.2s;
 }
 .news__more:hover { color: var(--paper); }
-.news__more i { font-style: normal; font-size: 1rem; transition: transform 0.3s; }
 .news.is-open + .news__more { border-top: 0; }
-.news.is-open + .news__more i { transform: rotate(180deg); }
 .news__date { position: relative; padding-left: 18px; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.04em; color: var(--paper); white-space: nowrap; }
 .news__date::before { content: ""; position: absolute; left: 0; top: 0.45em; width: 9px; height: 9px; border-radius: 50%; background: linear-gradient(120deg, var(--c1), var(--c3)); }
 .news__text { color: var(--paper-soft); font-size: 1rem; }
@@ -461,8 +459,6 @@ a.badge--soft:hover { color: var(--paper); border-color: color-mix(in srgb, var(
 .portal__title { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 3rem); line-height: 1; text-transform: uppercase; margin-bottom: 16px; }
 .portal__text { color: var(--paper-soft); margin-bottom: 24px; max-width: 360px; }
 .portal__cta { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; letter-spacing: 0.04em; color: var(--paper); }
-.portal__arrow { transition: transform 0.3s ease; }
-.portal:hover .portal__arrow { transform: translate(4px, -4px); }
 @media (max-width: 760px) { .portal { grid-template-columns: 1fr; } }
 
 /* ===== Life gallery (life.html) ===== */
