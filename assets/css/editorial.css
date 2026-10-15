@@ -386,22 +386,41 @@ a.badge--soft:hover { color: var(--paper); border-color: color-mix(in srgb, var(
 .pub__note a { color: var(--c3); text-decoration: underline; text-underline-offset: 2px; }
 .pub__note a:hover { color: var(--paper); }
 
-/* floating figure preview that trails the cursor over a publication */
-.pub[data-preview] { cursor: zoom-in; }
-.pub-preview { position: fixed; left: 0; top: 0; z-index: 9985; width: 520px; pointer-events: none; opacity: 0; transition: opacity 0.25s ease; will-change: transform; }
-.pub-preview.is-on { opacity: 1; }
-.pub-preview__card {
-  border-radius: 14px; overflow: hidden; background: #fff; border: 1px solid var(--line);
-  box-shadow: 0 30px 80px rgba(0,0,0,0.5); transform: scale(0.9) rotate(-2.5deg);
-  transition: transform 0.45s cubic-bezier(.2,.7,.2,1), height 0.35s cubic-bezier(.2,.7,.2,1);
+/* paper details: resting on a paper unfolds its figure + a two-line summary.
+   Height animates with the 0fr -> 1fr grid trick, so no JS measuring. */
+.pub.has-more { outline: none; }
+.pub.has-more:focus-visible { box-shadow: inset 3px 0 0 var(--c2); }
+.pub__more {
+  display: grid; grid-template-rows: 0fr; opacity: 0; margin-top: 0;
+  transition: grid-template-rows 0.6s var(--spring-soft), opacity 0.35s ease, margin-top 0.6s var(--spring-soft);
 }
-.pub-preview.is-on .pub-preview__card { transform: rotate(-1.2deg); }
-/* fixed width; JS eases the height to each figure's aspect ratio and the
-   two image layers cross-fade, so switching papers never makes it wobble */
-.pub-preview__card { position: relative; height: 240px; }
-.pub-preview img { position: absolute; left: 0; top: 0; display: block; width: 100%; height: auto; opacity: 0; transition: opacity 0.3s ease; }
-.pub-preview img.is-front { opacity: 1; }
-@media (hover: none) { .pub-preview { display: none; } }
+.pub.is-open .pub__more { grid-template-rows: 1fr; opacity: 1; margin-top: 18px; }
+.pub__more-inner {
+  min-height: 0; overflow: hidden;
+  display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 26px; align-items: center;
+}
+.pub__more--wide .pub__more-inner { grid-template-columns: 1fr; gap: 14px; }
+.pub__fig {
+  margin: 0; border-radius: 12px; overflow: hidden; background: #fff; border: 1px solid var(--line);
+  transform: translateY(10px) scale(0.985); filter: blur(6px);
+  transition: transform 0.7s var(--spring-soft), filter 0.5s ease;
+}
+.pub.is-open .pub__fig { transform: none; filter: none; transition-delay: 0.08s; }
+.pub__fig img { display: block; width: 100%; height: auto; }
+.pub__summary {
+  font-size: 0.95rem; line-height: 1.65; color: var(--paper-soft);
+  transform: translateY(8px); transition: transform 0.7s var(--spring-soft);
+}
+.pub.is-open .pub__summary { transform: none; transition-delay: 0.14s; }
+/* touch screens have no hover: hint that a tap unfolds the details */
+@media (hover: none) {
+  .pub.has-more .pub__body::after {
+    content: "Tap for figure & summary"; display: block; margin-top: 8px;
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--c2);
+  }
+  .pub.has-more.is-open .pub__body::after { content: "Tap to close"; }
+}
+@media (max-width: 880px) { .pub__more-inner { grid-template-columns: 1fr; gap: 14px; } }
 
 /* ===== Experience — editorial rows ===== */
 .xp { list-style: none; border-bottom: 1px solid var(--line); }

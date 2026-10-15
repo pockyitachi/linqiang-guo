@@ -480,71 +480,57 @@
   }
 
   /* --------------------------------------------------------
-     5c. PUBLICATION FIGURE PREVIEW (desktop hover)
-     Rows with data-preview float their teaser figure next to the
-     cursor, eased like the meteor head.
+     5c. PUBLICATION DETAILS
+     Resting on a paper (or tapping it) unfolds its figure and a
+     short summary under the row. Only one is open at a time. When a
+     row above folds up, the page scroll is compensated each frame so
+     the paper under the cursor stays put — no chain of rows opening
+     and closing as content shifts.
      -------------------------------------------------------- */
-  var preview = document.getElementById("pubPreview");
-  if (preview && finePointer) {
-    var card = preview.querySelector(".pub-preview__card");
-    var layers = card.querySelectorAll("img");
-    var front = 0, PW = 520, side = 1;
-    var tx = 0, ty = 0, cx = 0, cy = 0;
-    var visible = false, running = false, hideTimer = 0, hiddenAt = 0, wantSrc = "";
-
-    var bringForward = function (img) {
-      if (img.getAttribute("src") !== wantSrc) return;        // a newer hover won
-      card.style.height = Math.round(PW * img.naturalHeight / img.naturalWidth) + "px";
-      if (img === layers[front]) return;
-      layers[front].classList.remove("is-front");
-      img.classList.add("is-front");
-      front = front ? 0 : 1;
+  var pubList = document.querySelector(".pubs");
+  if (pubList) {
+    var moreRows = Array.prototype.slice.call(pubList.querySelectorAll(".pub.has-more"));
+    var canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    var openRow = null, dwellTimer = 0, closeTimer = 0;
+    var holdStill = function (row) {
+      var top0 = row.getBoundingClientRect().top, t0 = performance.now();
+      (function step() {
+        var dy = row.getBoundingClientRect().top - top0;
+        if (Math.abs(dy) > 0.5) window.scrollBy({ top: dy, left: 0, behavior: "instant" });
+        if (performance.now() - t0 < 750) requestAnimationFrame(step);
+      })();
     };
-    var setFigure = function (src) {
-      wantSrc = src;
-      var cur = layers[front], next = layers[front ? 0 : 1];
-      if (cur.getAttribute("src") === src) { bringForward(cur); return; }
-      next.onload = function () { bringForward(next); };
-      if (next.getAttribute("src") !== src) next.setAttribute("src", src);
-      else if (next.complete && next.naturalWidth) bringForward(next);
+    var setOpen = function (row) {
+      if (row === openRow) return;
+      var prev = openRow;
+      openRow = row;
+      if (prev && row && (prev.compareDocumentPosition(row) & Node.DOCUMENT_POSITION_FOLLOWING)) holdStill(row);
+      if (prev) { prev.classList.remove("is-open"); prev.setAttribute("aria-expanded", "false"); }
+      if (row) { row.classList.add("is-open"); row.setAttribute("aria-expanded", "true"); }
     };
-
-    // eased follow: the card rides beside the cursor, vertically centred on
-    // it and clamped to the viewport. Its side (right or left of the cursor)
-    // is chosen once per hover, so it never flips across the pointer.
-    var follow = function () {
-      cx += (tx - cx) * 0.2; cy += (ty - cy) * 0.2;
-      var ph = card.offsetHeight || 200;
-      var x = side > 0 ? cx + 36 : cx - 36 - PW;
-      x = Math.max(14, Math.min(window.innerWidth - PW - 14, x));
-      var y = Math.max(80, Math.min(window.innerHeight - ph - 14, cy - ph / 2));
-      preview.style.transform = "translate3d(" + x.toFixed(1) + "px," + y.toFixed(1) + "px,0)";
-      if (visible || Date.now() - hiddenAt < 400) requestAnimationFrame(follow);
-      else running = false;
-    };
-
-    document.querySelectorAll(".pub[data-preview]").forEach(function (row) {
-      row.addEventListener("pointerenter", function (e) {
-        clearTimeout(hideTimer);
-        tx = e.clientX; ty = e.clientY;
-        // only jump to the cursor if the card has fully faded out
-        if (!visible && Date.now() - hiddenAt > 300) {
-          cx = tx; cy = ty;
-          side = (tx + 36 + PW <= window.innerWidth - 14) ? 1 : -1;
-        }
-        setFigure(row.getAttribute("data-preview"));
-        visible = true; preview.classList.add("is-on");
-        if (!running) { running = true; requestAnimationFrame(follow); }
+    moreRows.forEach(function (row) {
+      if (canHover) {
+        row.addEventListener("pointerenter", function () {
+          clearTimeout(closeTimer); clearTimeout(dwellTimer);
+          dwellTimer = setTimeout(function () { setOpen(row); }, 260);
+        });
+        row.addEventListener("pointerleave", function () { clearTimeout(dwellTimer); });
+      }
+      row.addEventListener("click", function (e) {
+        if (e.target.closest("a")) return;
+        setOpen(openRow === row ? null : row);
       });
-      // short grace period so gliding to the next paper keeps the card up
-      row.addEventListener("pointerleave", function () {
-        clearTimeout(hideTimer);
-        hideTimer = setTimeout(function () {
-          visible = false; hiddenAt = Date.now(); preview.classList.remove("is-on");
-        }, 140);
+      row.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setOpen(openRow === row ? null : row); }
       });
     });
-    window.addEventListener("pointermove", function (e) { tx = e.clientX; ty = e.clientY; }, { passive: true });
+    if (canHover) {
+      pubList.addEventListener("pointerenter", function () { clearTimeout(closeTimer); });
+      pubList.addEventListener("pointerleave", function () {
+        clearTimeout(dwellTimer);
+        closeTimer = setTimeout(function () { setOpen(null); }, 600);
+      });
+    }
   }
 
   /* --------------------------------------------------------
