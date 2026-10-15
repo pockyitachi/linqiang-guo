@@ -163,17 +163,29 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 400; line-height
    that springs between them. Size changes are driven by JS (--iw/--ih)
    and animated with a spring so it morphs like the iPhone island. */
 .nav__inner { position: relative; }
-.island { position: absolute; left: 50%; top: 0; transform: translateX(-50%); z-index: 2; }
+.island {
+  position: absolute; left: 50%; top: 0; transform: translateX(-50%); z-index: 2;
+  /* jewel-tinted glass: a faint brand gradient over a dark base */
+  --is-bg: linear-gradient(120deg, rgba(255,46,154,0.16), rgba(124,77,255,0.20) 50%, rgba(24,199,255,0.14)), #121218;
+  --is-fg: #fff; --is-muted: rgba(244,241,234,0.7);
+  --is-border: rgba(170,140,255,0.30); --is-pill: rgba(255,255,255,0.14); --is-track: rgba(255,255,255,0.18);
+  --is-shadow: 0 10px 34px rgba(124,77,255,0.22), inset 0 1px 0 rgba(255,255,255,0.10); --is-blur: none;
+}
+[data-theme="light"] .island {
+  --is-bg: linear-gradient(120deg, rgba(194,65,111,0.10), rgba(98,70,201,0.13) 50%, rgba(31,127,184,0.10)), #fdfdff;
+  --is-fg: #18181d; --is-muted: rgba(24,24,29,0.6);
+  --is-border: rgba(98,70,201,0.20); --is-pill: rgba(98,70,201,0.12); --is-track: rgba(98,70,201,0.16);
+  --is-shadow: 0 10px 30px rgba(98,70,201,0.16), inset 0 1px 0 rgba(255,255,255,0.9);
+}
 .island__shell {
   position: relative; overflow: hidden;
   width: var(--iw, 150px); height: var(--ih, 36px); margin-top: var(--it, 16px);
   border-radius: var(--ir, 999px);
-  background: #0b0b0d; color: #f4f1ea;
-  border: 1px solid rgba(255,255,255,0.09);
-  box-shadow: 0 10px 34px rgba(0,0,0,0.32), inset 0 1px 0 rgba(255,255,255,0.06);
+  background: var(--is-bg); color: var(--is-fg);
+  border: 1px solid var(--is-border); box-shadow: var(--is-shadow);
+  -webkit-backdrop-filter: var(--is-blur); backdrop-filter: var(--is-blur);
   transition: width 0.7s var(--spring), height 0.7s var(--spring), margin-top 0.7s var(--spring), border-radius 0.7s var(--spring), box-shadow 0.4s ease;
 }
-[data-theme="light"] .island__shell { box-shadow: 0 10px 30px rgba(20,20,40,0.22), inset 0 1px 0 rgba(255,255,255,0.08); }
 .island__compact, .island__links {
   position: absolute; top: 0; left: 50%; white-space: nowrap;
   transform: translateX(-50%);
@@ -186,29 +198,29 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 400; line-height
 }
 .island__dot {
   width: 8px; height: 8px; border-radius: 50%; flex: none;
-  background: linear-gradient(120deg, #ff2e9a, #7c4dff 50%, #18c7ff);
+  background: linear-gradient(120deg, var(--c1), var(--c2) 50%, var(--c3));
   animation: islandPulse 2.6s ease-in-out infinite;
 }
 @keyframes islandPulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(124,77,255,0.55); transform: scale(1); }
-  50% { box-shadow: 0 0 0 6px rgba(124,77,255,0); transform: scale(1.15); }
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--c2) 55%, transparent); transform: scale(1); }
+  50% { box-shadow: 0 0 0 6px transparent; transform: scale(1.15); }
 }
 .island__label { display: inline-block; transition: opacity 0.25s ease, filter 0.3s ease, transform 0.5s var(--spring); }
 .island__label.is-swapping { opacity: 0; filter: blur(4px); transform: translateY(4px); }
 .island__ring { width: 20px; height: 20px; flex: none; transform: rotate(-90deg); }
 .island__ring circle { fill: none; stroke-width: 2.4; }
-.island__ring circle:first-child { stroke: rgba(255,255,255,0.14); }
-.island__ring-fill { stroke: #8f7bff; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: calc(1 - var(--progress, 0)); }
+.island__ring circle:first-child { stroke: var(--is-track); }
+.island__ring-fill { stroke: var(--c2); stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: calc(1 - var(--progress, 0)); }
 .island__links { display: flex; align-items: center; gap: 2px; height: 44px; padding: 0 6px; }
 .island__links a {
   position: relative; z-index: 1; padding: 7px 13px; border-radius: 999px;
   font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
-  color: rgba(244,241,234,0.66); transition: color 0.25s ease;
+  color: var(--is-muted); transition: color 0.25s ease;
 }
-.island__links a:hover, .island__links a.is-active { color: #fff; }
+.island__links a:hover, .island__links a.is-active { color: var(--is-fg); }
 .island__pill {
   position: absolute; z-index: 0; top: 6px; height: 32px; left: var(--px, 0); width: var(--pw, 0);
-  border-radius: 999px; background: rgba(255,255,255,0.12); opacity: 0;
+  border-radius: 999px; background: var(--is-pill); opacity: 0;
   transition: left 0.6s var(--spring), width 0.6s var(--spring), opacity 0.3s ease;
 }
 .island__links.has-pill .island__pill { opacity: 1; }
