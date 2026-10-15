@@ -21,10 +21,22 @@
     var hr = new Date().getHours();
     theme = (hr >= 7 && hr < 19) ? "light" : "dark";
   }
+  // canvas effects take their colours from the active theme's --c1..--c4
+  var fxPal = [];
+  function readPalette() {
+    var cs = getComputedStyle(root), out = [];
+    for (var i = 1; i <= 4; i++) {
+      var h = cs.getPropertyValue("--c" + i).trim().replace("#", "");
+      if (h.length === 3) h = h.replace(/(.)/g, "$1$1");
+      out.push([parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)]);
+    }
+    return out;
+  }
   function applyTheme(t) {
     theme = t;
     if (t === "light") root.setAttribute("data-theme", "light");
     else root.removeAttribute("data-theme");
+    fxPal = readPalette();
   }
   applyTheme(theme);
   if (themeBtn) {
@@ -114,10 +126,6 @@
     var RADIUS = 170;       // cursor influence radius
     var dots = [];
     var W = 0, H = 0;
-    // palettes match the CSS --c1..--c4: iridescent at night, espresso/gold by day
-    var PAL_DARK = [[255, 46, 154], [124, 77, 255], [24, 199, 255], [255, 210, 63]];
-    var PAL_LIGHT = [[164, 71, 31], [176, 125, 44], [122, 74, 34], [212, 162, 76]];
-    function palette() { return theme === "light" ? PAL_LIGHT : PAL_DARK; }
     // resting dot colour differs by theme so dots stay visible on light bg
     function baseColour() { return theme === "light" ? [120, 120, 138] : [150, 150, 165]; }
 
@@ -145,7 +153,7 @@
     function tick() {
       sx += (mx - sx) * 0.16; sy += (my - sy) * 0.16;
       ctx.clearRect(0, 0, W, H);
-      var BASE = baseColour(), PAL = palette();
+      var BASE = baseColour(), PAL = fxPal;
       for (var i = 0; i < dots.length; i++) {
         var d = dots[i];
         var dx = d.bx - sx, dy = d.by - sy;
@@ -195,8 +203,6 @@
     var mctx = meteor.getContext("2d");
     var mdpr = Math.min(window.devicePixelRatio || 1, 2);
     var mW = 0, mH = 0, maxTiles = 72;
-    var MPAL_DARK = [[255, 46, 154], [124, 77, 255], [24, 199, 255], [255, 210, 63]];
-    var MPAL_LIGHT = [[164, 71, 31], [176, 125, 44], [122, 74, 34], [212, 162, 76]];
     var MTILE = 16, MLIFE = 520;
     var tiles = [];
     var ptrX = window.innerWidth / 2, ptrY = window.innerHeight / 2; // raw pointer
@@ -245,7 +251,7 @@
       hx += (ptrX - hx) * 0.32; hy += (ptrY - hy) * 0.32;
       mctx.clearRect(0, 0, mW, mH);
       var now = performance.now();
-      var day = theme === "light", pal = day ? MPAL_LIGHT : MPAL_DARK;
+      var pal = fxPal, c1 = pal[0], c2 = pal[1];
 
       // tapering, glowing mosaic tail (newer tiles are larger & brighter)
       for (var i = tiles.length - 1; i >= 0; i--) {
@@ -261,12 +267,12 @@
 
       // bright meteor head at the smoothed cursor position
       if (mActive) {
-        var mid = day ? "rgba(196,140,60,0.95)" : "rgba(255,90,170,0.95)";
+        var mid = "rgba(" + c1[0] + "," + c1[1] + "," + c1[2] + ",0.95)";
         mctx.shadowBlur = 22 * glow; mctx.shadowColor = mid;
         var g = mctx.createRadialGradient(hx, hy, 0, hx, hy, 10);
-        g.addColorStop(0, day ? "rgba(255,246,228,0.98)" : "rgba(255,255,255,0.98)");
+        g.addColorStop(0, "rgba(255,255,255,0.98)");
         g.addColorStop(0.45, mid);
-        g.addColorStop(1, day ? "rgba(122,74,34,0)" : "rgba(124,77,255,0)");
+        g.addColorStop(1, "rgba(" + c2[0] + "," + c2[1] + "," + c2[2] + ",0)");
         mctx.fillStyle = g;
         mctx.beginPath(); mctx.arc(hx, hy, 10, 0, Math.PI * 2); mctx.fill();
       }
