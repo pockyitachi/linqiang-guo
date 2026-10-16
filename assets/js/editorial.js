@@ -38,6 +38,7 @@
     if (t === "light") root.setAttribute("data-theme", "light");
     else root.removeAttribute("data-theme");
     fxPal = readPalette();
+    try { root.dispatchEvent(new Event("themechange")); } catch (e) {}
   }
   applyTheme(theme);
   if (themeBtn) {
@@ -122,6 +123,25 @@
   var fxCanvas = document.getElementById("fxCanvas");
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  /* Touch screens: the finger also scrolls, so nothing follows it. A real
+     tap (no drag, released quickly) fires "fx:tap" instead, which plays a
+     ripple through the dots and a small burst on the meteor layer. Both
+     canvases then only animate while an effect is playing. */
+  var touchMode = !finePointer;
+  var tapStart = null;
+  window.addEventListener("pointerdown", function (e) {
+    if (e.pointerType === "touch") tapStart = { x: e.clientX, y: e.clientY, t: performance.now() };
+  }, { passive: true });
+  window.addEventListener("pointerup", function (e) {
+    if (!tapStart || e.pointerType !== "touch") return;
+    var dx = e.clientX - tapStart.x, dy = e.clientY - tapStart.y;
+    if (dx * dx + dy * dy < 144 && performance.now() - tapStart.t < 450) {
+      try { window.dispatchEvent(new CustomEvent("fx:tap", { detail: { x: e.clientX, y: e.clientY } })); } catch (err) {}
+    }
+    tapStart = null;
+  }, { passive: true });
+  window.addEventListener("pointercancel", function () { tapStart = null; }, { passive: true }); // scroll took over
+
   if (fxCanvas && !reduce) {
     var ctx = fxCanvas.getContext("2d");
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -135,8 +155,12 @@
     // smoothed pointer in viewport coords; start off-screen
     var mx = -9999, my = -9999, sx = -9999, sy = -9999;
 
+    var waves = [], running = false;
     function build() {
-      W = window.innerWidth; H = window.innerHeight;
+      // on phones the address bar resizes the viewport while scrolling:
+      // keep the tallest height seen so that never forces a rebuild
+      W = window.innerWidth; H = touchMode ? Math.max(H, window.innerHeight) : window.innerHeight;
+      if (touchMode) fxCanvas.style.height = H + "px";
       fxCanvas.width = Math.round(W * dpr);
       fxCanvas.height = Math.round(H * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -156,7 +180,13 @@
     function tick() {
       sx += (mx - sx) * 0.16; sy += (my - sy) * 0.16;
       ctx.clearRect(0, 0, W, H);
-      var BASE = baseColour(), PAL = fxPal;
+      var BASE = baseColour(), PAL = fxPal, now = performance.now();
+      // tap ripples: a ring that travels outward through the dots
+      for (var w = waves.length - 1; w >= 0; w--) {
+        var age = now - waves[w].born;
+        if (age > 1100) { waves.splice(w, 1); continue; }
+        waves[w].r = age * 0.55; waves[w].f = 1 - age / 1100;
+      }
       for (var i = 0; i < dots.length; i++) {
         var d = dots[i];
         var dx = d.bx - sx, dy = d.by - sy;
@@ -164,6 +194,12 @@
         var t = dist < RADIUS ? (1 - dist / RADIUS) : 0;
         t = t * t; // ease
         var ang = Math.atan2(dy, dx);
+        for (var k = 0; k < waves.length; k++) {
+          var wx = d.bx - waves[k].x, wy = d.by - waves[k].y;
+          var wd = Math.sqrt(wx * wx + wy * wy);
+          var wt = 1 - Math.abs(wd - waves[k].r) / 56;
+          if (wt > 0) { wt = wt * wt * waves[k].f; if (wt > t) { t = wt; ang = Math.atan2(wy, wx); } }
+        }
         var push = t * 18;
         var x = d.bx + Math.cos(ang) * push;
         var y = d.by + Math.sin(ang) * push;
@@ -178,22 +214,34 @@
         ctx.arc(x, y, size, 0, Math.PI * 2);
         ctx.fill();
       }
-      requestAnimationFrame(tick);
+      // desktop animates continuously (it follows the mouse); touch only
+      // while a ripple is playing, then rests on a static frame
+      if (!touchMode || waves.length) requestAnimationFrame(tick);
+      else running = false;
     }
+    function kick() { if (!running) { running = true; requestAnimationFrame(tick); } }
 
     // canvas is fixed at viewport 0,0, so pointer coords map directly
     window.addEventListener("pointermove", function (e) {
+      if (e.pointerType === "touch") return;
       mx = e.clientX; my = e.clientY;
     }, { passive: true });
     window.addEventListener("pointerout", function () { mx = -9999; my = -9999; });
+    window.addEventListener("fx:tap", function (e) {
+      waves.push({ x: e.detail.x, y: e.detail.y, born: performance.now(), r: 0, f: 1 });
+      kick();
+    });
+    root.addEventListener("themechange", kick);
 
-    var rt;
+    var rt, lastW = window.innerWidth;
     window.addEventListener("resize", function () {
-      clearTimeout(rt); rt = setTimeout(build, 150);
+      if (touchMode && window.innerWidth === lastW && window.innerHeight <= H) return;
+      lastW = window.innerWidth;
+      clearTimeout(rt); rt = setTimeout(function () { build(); kick(); }, 150);
     });
 
     build();
-    requestAnimationFrame(tick);
+    kick();
   }
 
   /* --------------------------------------------------------
@@ -212,10 +260,12 @@
     var hx = ptrX, hy = ptrY;                                         // smoothed head
     var palIdx = 0, mActive = false;
     var lpx = ptrX, lpy = ptrY;                  // last point a tile was dropped at
-    var glow = finePointer ? 1 : 0.5;            // lighter glow on touch -> smoother
+    var glow = 1;
 
+    var bursts = [], mRunning = false;
     function meteorSize() {
-      mW = window.innerWidth; mH = window.innerHeight;
+      mW = window.innerWidth; mH = touchMode ? Math.max(mH, window.innerHeight) : window.innerHeight;
+      if (touchMode) meteor.style.height = mH + "px";
       maxTiles = mW < 640 ? 56 : 80;
       meteor.width = Math.round(mW * mdpr); meteor.height = Math.round(mH * mdpr);
       mctx.setTransform(mdpr, 0, 0, mdpr, 0, 0);
@@ -238,17 +288,19 @@
       for (var i = 1; i <= n; i++) addTile(lpx + dx * i / n, lpy + dy * i / n);
       lpx = x; lpy = y;
     }
+    // the trail follows a mouse or pen only — never a finger, which is scrolling
     window.addEventListener("pointermove", function (e) {
+      if (e.pointerType === "touch") return;
       ptrX = e.clientX; ptrY = e.clientY; mActive = true; trailTo(ptrX, ptrY);
     }, { passive: true });
-    // touch: show the meteor while a finger is down, hide it on release
-    window.addEventListener("pointerdown", function (e) {
-      ptrX = e.clientX; ptrY = e.clientY; hx = ptrX; hy = ptrY; lpx = ptrX; lpy = ptrY;
-      mActive = true; addTile(ptrX, ptrY);
-    }, { passive: true });
-    window.addEventListener("pointerup", function () { mActive = false; }, { passive: true });
-    window.addEventListener("pointercancel", function () { mActive = false; }, { passive: true });
     window.addEventListener("pointerout", function () { mActive = false; });
+    // touch: a tap pops a small burst — a ring plus a few mosaic tiles
+    window.addEventListener("fx:tap", function (e) {
+      var parts = [];
+      for (var q = 0; q < 8; q++) parts.push({ a: q / 8 * Math.PI * 2 + Math.random() * 0.5, d: 26 + Math.random() * 18, ci: q % 4 });
+      bursts.push({ x: e.detail.x, y: e.detail.y, born: performance.now(), parts: parts });
+      if (!mRunning) { mRunning = true; requestAnimationFrame(meteorTick); }
+    });
 
     function meteorTick() {
       hx += (ptrX - hx) * 0.32; hy += (ptrY - hy) * 0.32;
@@ -279,14 +331,36 @@
         mctx.fillStyle = g;
         mctx.beginPath(); mctx.arc(hx, hy, 10, 0, Math.PI * 2); mctx.fill();
       }
+      // tap bursts (touch screens)
+      for (var b = bursts.length - 1; b >= 0; b--) {
+        var bu = bursts[b], u = (now - bu.born) / 650;
+        if (u >= 1) { bursts.splice(b, 1); continue; }
+        var e2 = 1 - Math.pow(1 - u, 3), fade = 1 - u;
+        var ring = mctx.createLinearGradient(bu.x - 30, bu.y - 30, bu.x + 30, bu.y + 30);
+        ring.addColorStop(0, "rgba(" + c1[0] + "," + c1[1] + "," + c1[2] + "," + fade + ")");
+        ring.addColorStop(1, "rgba(" + pal[2][0] + "," + pal[2][1] + "," + pal[2][2] + "," + fade + ")");
+        mctx.strokeStyle = ring; mctx.lineWidth = 2.2 * fade + 0.4;
+        mctx.beginPath(); mctx.arc(bu.x, bu.y, 6 + e2 * 30, 0, Math.PI * 2); mctx.stroke();
+        for (var q = 0; q < bu.parts.length; q++) {
+          var pt = bu.parts[q], pc = pal[pt.ci], ss = 7 * fade + 1.5;
+          var px = bu.x + Math.cos(pt.a) * pt.d * e2, py = bu.y + Math.sin(pt.a) * pt.d * e2;
+          mctx.fillStyle = "rgba(" + pc[0] + "," + pc[1] + "," + pc[2] + "," + (fade * 0.9) + ")";
+          mctx.fillRect(px - ss / 2, py - ss / 2, ss, ss);
+        }
+      }
       mctx.shadowBlur = 0;
-      requestAnimationFrame(meteorTick);
+      if (!touchMode || bursts.length || tiles.length) requestAnimationFrame(meteorTick);
+      else { mRunning = false; mctx.clearRect(0, 0, mW, mH); }
     }
 
-    var meteorRt;
-    window.addEventListener("resize", function () { clearTimeout(meteorRt); meteorRt = setTimeout(meteorSize, 150); });
+    var meteorRt, mLastW = window.innerWidth;
+    window.addEventListener("resize", function () {
+      if (touchMode && window.innerWidth === mLastW && window.innerHeight <= mH) return;
+      mLastW = window.innerWidth;
+      clearTimeout(meteorRt); meteorRt = setTimeout(meteorSize, 150);
+    });
     meteorSize();
-    requestAnimationFrame(meteorTick);
+    if (!touchMode) { mRunning = true; requestAnimationFrame(meteorTick); }
   }
 
   /* --------------------------------------------------------
