@@ -91,6 +91,9 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 400; line-height
 .fx-canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
 /* meteor cursor canvas — above all content */
 .meteor-canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 9990; pointer-events: none; }
+/* while a finger is down, a long press plays ripples instead of
+   selecting text or opening the link callout */
+html.is-pressing, html.is-pressing * { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
 /* keep all real content above the canvas */
 .nav, main, .footer { position: relative; z-index: 1; }
 
