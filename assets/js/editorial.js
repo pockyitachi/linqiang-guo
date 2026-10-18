@@ -136,6 +136,9 @@
      Both canvases only animate on touch screens while an effect is playing. */
   var touchMode = !finePointer;
   var press = null, swallowClick = 0;
+  var WAVE_SPEED = 0.3;      // ripple speed, px per ms (dots and rings share it)
+  var PULSE_EVERY = 620;     // ms between pulses while holding
+  var PULSE_LIFE = 4600;     // ms a held pulse lives (long enough to bounce back)
   var fire = function (name, x, y) {
     try { window.dispatchEvent(new CustomEvent(name, { detail: { x: x, y: y } })); } catch (err) {}
   };
@@ -157,7 +160,7 @@
       if (navigator.vibrate) { try { navigator.vibrate(8); } catch (err) {} }
       fire("fx:holdstart", p.x, p.y);
       fire("fx:pulse", p.x, p.y);
-      p.pulse = setInterval(function () { fire("fx:pulse", p.x, p.y); }, 420);
+      p.pulse = setInterval(function () { fire("fx:pulse", p.x, p.y); }, PULSE_EVERY);
       p.cap = setTimeout(function () { endPress(false); }, 15000);
     }, 380);
   }, { passive: true });
@@ -230,7 +233,7 @@
       for (var w = waves.length - 1; w >= 0; w--) {
         var wv = waves[w], age = now - wv.born;
         if (age > wv.life) { waves.splice(w, 1); continue; }
-        var wr = age * 0.55, wf = Math.pow(1 - age / wv.life, 1.2) * wv.amp;
+        var wr = age * WAVE_SPEED, wf = Math.pow(1 - age / wv.life, 1.2) * wv.amp;
         for (var m = 0; m < MIRRORS.length; m++) {
           var mi = MIRRORS[m];
           src.push({ x: mi[0] < 0 ? -wv.x : mi[0] > 0 ? 2 * VW - wv.x : wv.x,
@@ -284,11 +287,11 @@
     }, { passive: true });
     window.addEventListener("pointerout", function () { mx = -9999; my = -9999; });
     window.addEventListener("fx:tap", function (e) {
-      waves.push({ x: e.detail.x, y: e.detail.y, born: performance.now(), life: 1200, amp: 1 });
+      waves.push({ x: e.detail.x, y: e.detail.y, born: performance.now(), life: 1800, amp: 1 });
       kick();
     });
     window.addEventListener("fx:pulse", function (e) {
-      waves.push({ x: e.detail.x, y: e.detail.y, born: performance.now(), life: 2800, amp: 0.9 });
+      waves.push({ x: e.detail.x, y: e.detail.y, born: performance.now(), life: PULSE_LIFE, amp: 0.9 });
       if (waves.length > 10) waves.shift();
       kick();
     });
@@ -455,9 +458,9 @@
         rg.addColorStop(1, "rgb(" + pal[2][0] + "," + pal[2][1] + "," + pal[2][2] + ")");
         mctx.strokeStyle = rg; mctx.lineWidth = 1.4;
         for (var ri = rings.length - 1; ri >= 0; ri--) {
-          var rn = rings[ri], ru = (now - rn.born) / 2800;
+          var rn = rings[ri], ru = (now - rn.born) / PULSE_LIFE;
           if (ru >= 1) { rings.splice(ri, 1); continue; }
-          var rr2 = (now - rn.born) * 0.55, ra = 0.5 * Math.pow(1 - ru, 1.4);
+          var rr2 = (now - rn.born) * WAVE_SPEED, ra = 0.5 * Math.pow(1 - ru, 1.4);
           var mxs = [rn.x, -rn.x, 2 * VW - rn.x], mys = [rn.y, -rn.y, 2 * VH - rn.y];
           for (var ix = 0; ix < 3; ix++) for (var iy = 0; iy < 3; iy++) {
             var cxm = mxs[ix], cym = mys[iy];
